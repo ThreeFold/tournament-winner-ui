@@ -1,0 +1,37 @@
+$base-font-family: arial;
+$tw-light-gray: #cfcfcf;
+$tw-dark-gray: #494949;
+$tw-primary: #7840d3;
+$tw-primary-font-top: white;
+
+/* General Spacing Variables */
+
+$size1: 0.125rem;
+$size2: 0.25rem;
+$size3: 0.5rem;
+$size4: 1rem;
+$size5: 2rem;
+$size6: 4rem;
+
+* { 
+    font-family: $base-font-family;
+}
+.body-wrapper {
+    display:grid;
+}
+@media screen and (min-width:56rem){
+    .body-wrapper {
+        grid-template-columns: 2fr 2fr;
+        .content {
+            width: 50rem;
+        }
+    }
+}
+@media screen and (max-width:20rem){
+    .body-wrapper {
+        grid-template: 2fr 2fr;
+        .content {
+            width: 15rem;
+        }
+    }
+}
