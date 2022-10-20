@@ -23,38 +23,50 @@ $: communitySubPages = [
 $: pathname = $page.url.pathname;
 $: activeSubPage = communitySubPages.find(v => v.Url.includes(pathname));
 </script>
-<div class="community-page">
-    <header>
-        <h1>{thisCommunity.name}</h1>
-        <span>{pathname}</span>
-    </header>
-    <nav>
-        {#each communitySubPages as communitySubPage}
-        <a class="nav-item {activeSubPage === communitySubPage ? 'active' :''}"  href="{communitySubPage.Url}">{communitySubPage.Label}</a>
-        {/each}
-    </nav>
-    <div class="community-body">
-        <slot></slot>
-    </div>
+<div class="content-header">
+    <h1>{thisCommunity.name}</h1>
+</div>
+<div class="content-menu">
+    {#each communitySubPages as communitySubPage}
+    <a class="nav-item {activeSubPage === communitySubPage ? 'active' :''}"  href="{communitySubPage.Url}">{communitySubPage.Label}</a>
+    {/each}
+</div>
+<div class="content-body">
+    <slot></slot>
 </div>
 
 <style lang="scss" scoped>
     
-    nav {
-        display:flex;
-        flex-flow: row wrap;
-        justify-content:space-evenly;
-        column-gap: 2rem;
-
-        .nav-item {
-            padding: $size3 $size3;
-            border-radius:$size2;
-            text-decoration:none;
-            color: $tw-primary;
-            &.active {
-                background-color: $tw-primary;
-                color: $tw-primary-font-top;
-            }
+.content-header {
+    grid-area: title;
+}
+.content-menu {
+    grid-area: content-nav;
+    @media screen {
+        @media(min-width:$large-breakpoint){
+            padding-right:$size5;
         }
     }
+}
+.content-body {
+    grid-area: content-body;
+}
+.content-menu {
+    display:flex;
+    flex-flow: column wrap;
+    justify-content:flex-start;
+    column-gap: $size5;
+    .nav-item {
+        padding: $size3 $size3;
+        border-radius:$size2;
+        text-decoration:none;
+        text-align:center;
+        color: $tw-primary;
+        flex-basis:content;
+        &.active {
+            background-color: $tw-primary;
+            color: $tw-primary-font-top;
+        }
+    }
+}
 </style>
