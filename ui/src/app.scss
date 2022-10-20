@@ -13,25 +13,10 @@ $size4: 1rem;
 $size5: 2rem;
 $size6: 4rem;
 
+/* Page Size Breakpoints */
+$large-breakpoint: 56rem;
+$small-breakpoint: 20rem;
+
 * { 
     font-family: $base-font-family;
-}
-.body-wrapper {
-    display:grid;
-}
-@media screen and (min-width:56rem){
-    .body-wrapper {
-        grid-template-columns: 2fr 2fr;
-        .content {
-            width: 50rem;
-        }
-    }
-}
-@media screen and (max-width:20rem){
-    .body-wrapper {
-        grid-template: 2fr 2fr;
-        .content {
-            width: 15rem;
-        }
-    }
 }
