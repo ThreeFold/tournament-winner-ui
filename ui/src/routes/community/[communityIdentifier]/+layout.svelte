@@ -18,6 +18,11 @@ $: communitySubPages = [
         SubPageTitle: "Players",
         Url: `${communityHref}/players`,
         Label: "Players",
+    },
+    {
+        SubPageTitle: "Rankings",
+        Url: `${communityHref}/ranks`,
+        Label: `Rankings`
     }
 ];
 $: pathname = $page.url.pathname;

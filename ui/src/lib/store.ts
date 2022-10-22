@@ -1,5 +1,7 @@
 import { readable } from "svelte/store";
 import Community from "./models/community";
+import type { Character, Game } from "./models/player";
+import type Player from "./models/player";
 
 export const community = readable(new Community(
     1234,
@@ -18,3 +20,25 @@ Phasellus sem dolor, maximus a dui ac, sodales maximus arcu. Praesent pretium te
 Nam cursus felis neque, vitae ultricies est tincidunt nec. Mauris dictum, dolor a dapibus auctor, erat neque mattis mauris, sit amet eleifend risus lectus et augue. Suspendisse nec arcu in massa cursus tincidunt. Phasellus rhoncus augue ac lacus semper, eget finibus ligula venenatis. Nullam ultricies metus eu condimentum eleifend. Quisque nec dolor nec nisi ornare posuere. Donec libero nulla, ullamcorper laoreet dictum in, ornare et nisi. Donec nec posuere ante. Cras id vestibulum leo. Suspendisse et est sit amet nulla sodales fringilla a non mi. In id nulla id eros blandit tempus ut vitae lorem. Morbi odio tortor, efficitur eget dapibus vitae, bibendum et massa. Vestibulum pulvinar nisi et nisl viverra, sed egestas justo ultrices. Nunc vel dapibus nisl. `
 
 ));
+
+const players = new Array<Player>();
+
+players.push({
+    id: "1",
+    firstName: "Nicholas",
+    lastName: "McNew",
+    gameCharacters: new Array<Character>(),
+    games: [{
+        id: 1,
+        slug: "ggxrdr2",
+        title: "Guilty Gear Xrd Rev 2",
+        bannerImg: new URL("https://google.com"),
+        iconImg: new URL("https://google.com"),
+        gameCharacters: new Array<Character>()
+    }],
+    playerCreationDate: new Date(),
+    username: "ThreeFold",
+    usernamePrefix: "GSS",
+    previousNames: new Array<string>()
+});
+export const communityPlayers = readable(players);
