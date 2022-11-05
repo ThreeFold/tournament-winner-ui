@@ -1,12 +1,11 @@
 <script lang="ts">
-	import type { Character, Game } from "$lib/models/player";
-	import type Player from "$lib/models/player";
-    import { communityPlayers } from '$lib/store';
-    let thisCommunityPlayers: Array<Player>;
-    communityPlayers.subscribe(value => {
-        thisCommunityPlayers = value;
-    });
-    
+import type { Character, Game } from "$lib/models/player";
+import type Player from "$lib/models/player";
+import { communityPlayers } from '$lib/store';
+let thisCommunityPlayers: Array<Player>;
+communityPlayers.subscribe(value => {
+    thisCommunityPlayers = value;
+});
 </script>
 <div>
     <!--Filters-->
