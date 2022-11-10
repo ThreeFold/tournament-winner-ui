@@ -1,11 +1,15 @@
+using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Data
 {
-    public class CommunityContext : DbContext
+    public class CommunityContext : ApiAuthorizationDbContext<User>
     {
-        public CommunityContext(DbContextOptions<CommunityContext> options) : base(options)
+        public CommunityContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
+        : base(options, operationalStoreOptions)
         {
         }
         public DbSet<Community> Communities {get;set;}
@@ -15,6 +19,7 @@ namespace TournamentWinner.Api.Data
         public DbSet<CommunityUser> CommunityUsers {get;set;}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Community>().ToTable("communities")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");

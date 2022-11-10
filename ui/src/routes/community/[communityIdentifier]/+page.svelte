@@ -1,12 +1,9 @@
 <script lang="ts">
-    import type Community from '$lib/models/community';
-import { community } from "$lib/store";
-    
-let thisCommunity: Community;
-community.subscribe(value => {
-    thisCommunity = value;
-});
+import type Community from '$lib/models/community';
+import type { PageData } from './$types';
+
+export let data: PageData;
 </script>
-<p>{thisCommunity.description}</p>
+<p>{data.community.description}</p>
 <style lang="scss" scoped>
 </style>

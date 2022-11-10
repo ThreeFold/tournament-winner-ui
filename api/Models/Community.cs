@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace TournamentWinner.Api.Models;
 public class Community {
     public int CommunityId {get;set; }
@@ -15,8 +17,8 @@ public class Community {
 public class CommunityUser {
     public int CommunityUserId {get;set;}
     public int CommunityId {get;set;}
-    public Guid UserId {get;set;}
     public Community Community {get;set;}
+    public string UserId {get;set;}
     public User User {get;set;}
     public ICollection<CommunityUserRole> Roles {get;set;}
     public DateTime InsertDate {get;set;}
@@ -24,7 +26,7 @@ public class CommunityUser {
 
 public class CommunityUserRole {
     public int CommunityUserRoleId {get;set;}
-    public Guid UserId {get;set;}
+    public string UserId {get;set;}
     public User User {get;set;}
     public CommunityRoleType RoleType {get;set;}
     public DateTime InsertDate {get;set;}
@@ -37,10 +39,8 @@ public enum CommunityRoleType {
     Member
 }
 
-public class User {
-    public Guid UserId {get;set;}
+public class User : IdentityUser {
     public string? UsernamePrefix {get;set;}
-    public string Username {get;set;}
     public string? FirstName {get;set;}
     public string? LastName {get;set;}
     public DateTime PlayerCreationDate {get;set;}
@@ -51,7 +51,7 @@ public class User {
 public class UserGame {
     public int UserGameId {get;set;}
     public int GameId {get;set;}
-    public Guid UserId {get;set;}
+    public string UserId {get;set;}
     public Game Game {get;set;}
     public User User {get;set;}
     public ICollection<UserGameCharacter> Characters {get;set;}

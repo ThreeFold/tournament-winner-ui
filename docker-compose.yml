@@ -9,14 +9,12 @@ services:
       POSTGRES_DB: tournamentwinner
     ports:
       - 5432:5432
-  adminer:
-    image: adminer
-    restart: always
+  api:
+    image: twapi
+    build:
+      context: .
+      dockerfile: api/Dockerfile
     depends_on:
       - postgres
-    environment:
-      ADMINER_DEFAULT_DB_DRIVER: pgsql
-      ADMINER_DEFAULT_DB_HOST: postgres
-      ADMINER_DEFAULT_DB_NAME: tournament-winner
     ports:
-      - 8080:8080
+      - 5109:5109

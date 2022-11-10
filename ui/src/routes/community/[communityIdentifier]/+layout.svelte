@@ -1,13 +1,10 @@
 <script lang="ts">
 import { page } from "$app/stores";
 import type Community from "$lib/models/community";
-import { community } from "$lib/store";
+import type { LayoutData } from "./$types";
 
-let thisCommunity: Community;
-$: communityHref = `/community/${thisCommunity.communityIdentifier}`;
-community.subscribe(value => {
-    thisCommunity = value;
-});
+export let data: LayoutData;
+$: communityHref = `/community/${data.community.slug}`;
 $: communitySubPages = [
     {
         SubPageTitle: "Home",
@@ -29,7 +26,7 @@ $: pathname = $page.url.pathname;
 $: activeSubPage = communitySubPages.find(v => v.Url.includes(pathname));
 </script>
 <div class="content-header">
-    <h1>{thisCommunity.name}</h1>
+    <h1>{data.community.name}</h1>
 </div>
 <div class="content-menu">
     {#each communitySubPages as communitySubPage}

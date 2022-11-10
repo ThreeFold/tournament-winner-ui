@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentWinner.Api.Data;
 using TournamentWinner.Api.Models;
@@ -5,7 +6,8 @@ using TournamentWinner.Api.Models;
 namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Authorize]
+[Route("api/[controller]")]
 public class CommunityController : ControllerBase {
 
     private CommunityContext _context;
@@ -13,26 +15,34 @@ public class CommunityController : ControllerBase {
         this._context = context;
     }
 
-    [HttpGet]
-    public Community? GetCommunity(string communityId){
+    [HttpGet("{communityId}")]
+    public Community? Get(string communityId){
         //communityId can be the slag or actual id, resolve to one
-
         if(int.TryParse(communityId, out var communityActualId)){
             return this._context.Communities.FirstOrDefault(c => c.CommunityId == communityActualId);
         }
         
         return this._context.Communities.FirstOrDefault(c => c.Slug == communityId);
     }
+    [HttpGet("{communityId}/players")]
+    public IEnumerable<Player> GetPlayers(string communityId){
+        //communityId can be the slag or actual id, resolve to one
+        if(int.TryParse(communityId, out var communityActualId)){
+            return this._context.Communities.FirstOrDefault(c => c.CommunityId == communityActualId)?.Players ?? new List<Player>();
+        }
+        
+        return this._context.Communities.FirstOrDefault(c => c.Slug == communityId)?.Players ?? new List<Player>();
+    }
     [HttpPost]
-    public Community CreateCommunity(Community community){
+    public Community Post(Community community){
         return new Community();
     }
     [HttpPatch]
-    public void UpdateCommunity(Community community){
+    public void Patch(Community community){
 
     }
     [HttpDelete]
-    public void DeleteCommunity(Community community){
+    public void Delete(Community community){
 
     }
 }
