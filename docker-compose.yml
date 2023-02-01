@@ -13,7 +13,7 @@ services:
     image: twapi
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: api/DOCKERFILE
     depends_on:
       - postgres
     ports:

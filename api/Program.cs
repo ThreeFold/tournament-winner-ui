@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
 using TournamentWinner.Api.Data;
 using TournamentWinner.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +12,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CommunityContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CommunityContext>();
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<User, CommunityContext>();
-builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+builder.Services.AddAuthentication(options => {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options => {
+        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
+        options.Audience = builder.Configuration["Auth0:Audience"];
+    });
 
 builder.Services.AddControllers();
 var app = builder.Build();
@@ -32,7 +34,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseIdentityServer();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -39,7 +39,8 @@ public enum CommunityRoleType {
     Member
 }
 
-public class User : IdentityUser {
+public class User  {
+    public string UserId {get;set;}
     public string? UsernamePrefix {get;set;}
     public string? FirstName {get;set;}
     public string? LastName {get;set;}

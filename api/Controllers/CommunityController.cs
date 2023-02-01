@@ -7,12 +7,17 @@ namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class CommunityController : ControllerBase {
 
     private CommunityContext _context;
     public CommunityController(CommunityContext context) {
         this._context = context;
+    }
+
+    [HttpGet("list")]
+    public IEnumerable<Community>? GetCommunities(int p = 1, int r = 20){
+        return this._context.Communities.Take(r).Skip(p - 1 * r);
     }
 
     [HttpGet("{communityId}")]

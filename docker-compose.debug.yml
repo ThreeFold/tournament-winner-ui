@@ -20,14 +20,14 @@ services:
     environment:
       ADMINER_DEFAULT_DB_DRIVER: pgsql
       ADMINER_DEFAULT_DB_HOST: postgres
-      ADMINER_DEFAULT_DB_NAME: tournament-winner
+      ADMINER_DEFAULT_DB_NAME: tournamentwinner
     ports:
       - 8080:8080
   twapi:
     image: twapi
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: api/DOCKERFILE
     ports:
       - 5109:5109
     environment:

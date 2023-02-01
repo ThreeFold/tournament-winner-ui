@@ -3,7 +3,10 @@ import type { Character, Game } from "$lib/models/player";
 import type Player from "$lib/models/player";
 import type { PageData } from ".svelte-kit/types/src/routes/$types";
 
+
 export let data: PageData;
+
+console.log(data);
 </script>
 <div>
     <!--Filters-->
@@ -23,7 +26,7 @@ export let data: PageData;
                     <td><span class="prefix">{player.usernamePrefix} | </span>{player.username}</td>
                     <td>
                         {#each player.games as game}
-                            <a href="/community/games/{game.slug}">{game.slug?.toLocaleUpperCase()}</a>
+                            <a href="{data.communityHref}/games/{game.slug}">{game.slug?.toLocaleUpperCase()}</a>
                         {/each}
                     </td>
                 </tr>

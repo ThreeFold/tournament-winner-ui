@@ -1,15 +1,12 @@
-using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Data
 {
-    public class CommunityContext : ApiAuthorizationDbContext<User>
+    public class CommunityContext : DbContext
     {
-        public CommunityContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
-        : base(options, operationalStoreOptions)
+        public CommunityContext(DbContextOptions options)
+        : base(options)
         {
         }
         public DbSet<Community> Communities {get;set;}
