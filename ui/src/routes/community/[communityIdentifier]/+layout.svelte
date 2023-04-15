@@ -1,35 +1,36 @@
 <script lang="ts">
 import { page } from "$app/stores";
 import type Community from "$lib/models/community";
-import { community } from "$lib/store";
+import type { LayoutData } from "./$types";
 
-let thisCommunity: Community;
-$: communityHref = `/community/${thisCommunity.communityIdentifier}`;
-community.subscribe(value => {
-    thisCommunity = value;
-});
+export let data: LayoutData;
 $: communitySubPages = [
     {
         SubPageTitle: "Home",
-        Url: communityHref,
+        Url: data.communityHref,
         Label: "Community Home Page",
     },
     {
+        SubPageTitle: "Games",
+        Url: `${data.communityHref}/games`,
+        Label: 'Games'
+    },
+    {
         SubPageTitle: "Players",
-        Url: `${communityHref}/players`,
+        Url: `${data.communityHref}/players`,
         Label: "Players",
     },
     {
         SubPageTitle: "Rankings",
-        Url: `${communityHref}/ranks`,
+        Url: `${data.communityHref}/ranks`,
         Label: `Rankings`
     }
 ];
 $: pathname = $page.url.pathname;
-$: activeSubPage = communitySubPages.find(v => v.Url.includes(pathname));
+$: activeSubPage = communitySubPages.find(v => v.Url?.includes(pathname));
 </script>
 <div class="content-header">
-    <h1>{thisCommunity.name}</h1>
+    <h1>{data.community?.name}</h1>
 </div>
 <div class="content-menu">
     {#each communitySubPages as communitySubPage}

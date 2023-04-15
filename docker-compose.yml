@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tournamentwinner
+    ports:
+      - 5432:5432
+  api:
+    image: twapi
+    build:
+      context: .
+      dockerfile: api/DOCKERFILE
+    depends_on:
+      - postgres
+    ports:
+      - 5109:5109

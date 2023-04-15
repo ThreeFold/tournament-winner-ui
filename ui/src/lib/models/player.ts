@@ -5,24 +5,37 @@ export default interface Player {
     firstName: string;
     lastName: string;
     playerCreationDate: Date;
-    games: Array<Game>;
-    gameCharacters: Array<Character>;
+    playerGames: Array<PlayerGame>;
     previousNames: Array<string>;
 
+}
+export interface PlayerGame {
+
+}
+export interface PlayerGameCharacter {
+
+}
+export interface User {
+    id: string;
+    name: string;
 }
 export interface Game {
     id: number;
     slug?: string;
     title: string;
-    bannerImg: URL;
-    iconImg: URL;
-    
-    gameCharacters: Array<Character>;
+    bannerImg: string;
+    iconImg: string;
 }
 export interface Character {
     id: number;
     name: string;
+    description?: string;
+}
+export interface GameCharacter {
     //this should be something like ssbu-mario
     referenceId: string;
     game: Game;
+    character: Character;
+    description?: string;
+    wikiLink?: string;
 }

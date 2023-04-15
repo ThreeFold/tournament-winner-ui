@@ -1,11 +1,12 @@
 <script lang="ts">
 import type { Character, Game } from "$lib/models/player";
 import type Player from "$lib/models/player";
-import { communityPlayers } from '$lib/store';
-let thisCommunityPlayers: Array<Player>;
-communityPlayers.subscribe(value => {
-    thisCommunityPlayers = value;
-});
+import type { PageData } from ".svelte-kit/types/src/routes/$types";
+
+
+export let data: PageData;
+
+console.log(data);
 </script>
 <div>
     <!--Filters-->
@@ -20,12 +21,12 @@ communityPlayers.subscribe(value => {
             </tr>
         </thead>
         <tbody>
-            {#each thisCommunityPlayers as player}
+            {#each data.players as player}
                 <tr>
                     <td><span class="prefix">{player.usernamePrefix} | </span>{player.username}</td>
                     <td>
                         {#each player.games as game}
-                            <a href="/community/games/{game.slug}">{game.slug?.toLocaleUpperCase()}</a>
+                            <a href="{data.communityHref}/games/{game.slug}">{game.slug?.toLocaleUpperCase()}</a>
                         {/each}
                     </td>
                 </tr>
