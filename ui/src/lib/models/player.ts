@@ -5,14 +5,19 @@ export default interface Player {
     firstName: string;
     lastName: string;
     playerCreationDate: Date;
-    games: Array<Game>;
-    gameCharacters: Array<GameCharacter>;
+    playerGames: Array<PlayerGame>;
     previousNames: Array<string>;
+
+}
+export interface PlayerGame {
+
+}
+export interface PlayerGameCharacter {
 
 }
 export interface User {
     id: string;
-    name: 
+    name: string;
 }
 export interface Game {
     id: number;
@@ -20,17 +25,17 @@ export interface Game {
     title: string;
     bannerImg: string;
     iconImg: string;
-    
-    gameCharacters: Array<GameCharacter>;
 }
 export interface Character {
     id: number;
     name: string;
     description?: string;
-    games: Array<Game>;
 }
-export interface GameCharacter extends Character {
+export interface GameCharacter {
     //this should be something like ssbu-mario
     referenceId: string;
-    characterGame: Game;
+    game: Game;
+    character: Character;
+    description?: string;
+    wikiLink?: string;
 }

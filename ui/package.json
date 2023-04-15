@@ -35,8 +35,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"oidc-client-ts": "^2.2.0",
-		"oidc-provider": "^8.0.0",
+		"@auth/core": "^0.5.1",
+		"@auth/sveltekit": "^0.3.0",
+		"@supabase/supabase-js": "^2.8.0",
 		"openid-client": "^5.3.1"
 	}
 }

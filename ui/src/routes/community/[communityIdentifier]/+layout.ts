@@ -4,7 +4,6 @@ import type { LayoutLoad } from './$types';
 export const load: LayoutLoad = async ({params}) => {
     try {
         console.log(`Grabbing Community: `, params.communityIdentifier);
-        //const community = await fetch(`http://localhost:5109/api/community/${params.communityIdentifier}`);
         const communityData: Community = {
             id: 1,
             insertDate: new Date(),
