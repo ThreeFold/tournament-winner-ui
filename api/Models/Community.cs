@@ -6,7 +6,6 @@ public class Community {
     public string Name {get;set;}
     public string? Slug {get;set;}
     public string Description {get;set;}
-    public Guid OwnerUserId {get;set;}
     public User Owner {get;set;}
     public ICollection<CommunityGame> Games {get;set;}
     public ICollection<Player> Players {get;set;}
@@ -39,7 +38,7 @@ public enum CommunityRoleType {
     Member
 }
 
-public class User  {
+public class User : IdentityUser  {
     public string UserId {get;set;}
     public string? UsernamePrefix {get;set;}
     public string? FirstName {get;set;}

@@ -25,11 +25,15 @@ export interface Game {
     title: string;
     bannerImg: string;
     iconImg: string;
+
+    characters: Array<GameCharacter>;
 }
 export interface Character {
     id: number;
     name: string;
     description?: string;
+
+    games: Array<GameCharacter>;
 }
 export interface GameCharacter {
     //this should be something like ssbu-mario
