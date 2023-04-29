@@ -6,13 +6,16 @@ using TournamentWinner.Api.Models;
 namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
-[Authorize]
-[Route("api/v1/[controller]")]
 public class CommunityController : ControllerBase {
 
     private CommunityContext _context;
     public CommunityController(CommunityContext context) {
         this._context = context;
+    }
+
+    [HttpGet]
+    public string Index(){
+        return "success";
     }
 
     [HttpGet("list")]

@@ -11,14 +11,14 @@ export const load: PageLoad = async ({params}) => {
             iconImg: "/img/games/ggxrdr2/logo.png",
             id: 1,
             title: "Guilty Gear Xrd Rev2",
-            slug: "ggxrdr2",
-            gameCharacters: new Array<Character>(),
+            slug: "rev2",
+            characters: new Array<GameCharacter>,
         };
         const leoWhitefang: Character = {
             id: 1,
-            name: "Leo Whitefang (Rev2)",
+            name: "Leo Whitefang",
             description: "The Second Kind of Illyria",
-            games: new Array<Game>(),
+            games: new Array<GameCharacter>(),
         };
         const rev2Leo: GameCharacter = {
             character: leoWhitefang,
@@ -26,21 +26,24 @@ export const load: PageLoad = async ({params}) => {
             referenceId: 'rev2-leo',
         };
 
+        leoWhitefang.games.push(rev2Leo);
+        xrdR2.characters.push(rev2Leo);
+
         const ssbu: Game = {
             bannerImg: "/img/games/ssbu/banner.png",
-            gameCharacters: new Array<Character>(),
             iconImg: "/img/games/ssbu/logo.png",
             id: 2,
             title: "Super Smash Bros. Ultimate",
-            slug: "ssbu"
+            slug: "ssbu",
+            characters: new Array<GameCharacter>,
         };
         const ssbm: Game = {
             bannerImg: "/img/games/ssbm/banner.jpg",
-            gameCharacters: new Array<Character>(),
             iconImg: "/img/games/ssbm/logo.png",
             id: 3,
             title: "Super Smash Bros. Melee",
-            slug: "ssbm"
+            slug: "ssbm",
+            characters: new Array<GameCharacter>,
         };
         console.log("Loaded Games:", )
         return {

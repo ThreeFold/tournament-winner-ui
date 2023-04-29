@@ -12,14 +12,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CommunityContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
-builder.Services.AddAuthentication(options => {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options => {
-        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
-        options.Audience = builder.Configuration["Auth0:Audience"];
-    });
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityServer()
+    .AddApiAuthorization<User, ApplicationDbContext>();
+builder.Services.AddAuthentication()
+    .AddIdentityServerJwt();
+// builder.Services.dAuthentication(options => {
+//         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+// });
+    // .AddJwtBearer(options => {
+    //     options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
+    //     options.Audience = builder.Configuration["Auth0:Audience"];
+    // });
 
 builder.Services.AddControllers();
 var app = builder.Build();
@@ -35,7 +41,5 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
