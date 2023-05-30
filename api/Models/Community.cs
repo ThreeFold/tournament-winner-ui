@@ -133,7 +133,7 @@ public class Game {
     public string Name {get;set;}
     public string Slug {get;set;}
     public string Description {get;set;}
-    public ICollection<Character> Characters {get;set;}
+    public ICollection<CharacterGame> GameCharacters {get;set;}
     public DateTime ReleaseDate {get;set;}
     public DateTime InsertDate {get;set;}
 }
@@ -142,13 +142,17 @@ public class CharacterGame {
     public int CharacterId {get;set;}
     public int GameId {get;set;}    
     public string? UniqueIdentifier {get;set;}
+    public DateTime InsertDate {get;set;}
     public Game Game {get;set;}
     public Character Character {get;set;}
 }
 public class Character {
     public int CharacterId {get;set;}
     public string Name {get;set;}
+    public string Description {get;set;}
+    public ICollection<string> AlternateNames {get;set;}
     public DateTime InsertDate {get;set;}
+    public ICollection<CharacterGame> CharacterGames {get;set;}
 }
 
 public class League {

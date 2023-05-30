@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Data
 {
-    public class CommunityContext : DbContext
+    public class CommunityContext : IdentityDbContext<User>
     {
         public CommunityContext(DbContextOptions options)
         : base(options)
         {
         }
         public DbSet<Community> Communities {get;set;}
-        public DbSet<User> Users {get;set;}
         public DbSet<Player> Players {get;set;}
         public DbSet<Game> Games {get;set;}
         public DbSet<CommunityUser> CommunityUsers {get;set;}
@@ -56,7 +56,13 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<Game>().ToTable("games")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<Character>().ToTable("characters")
+            modelBuilder.Entity<Character>(entity => {
+                entity.ToTable("character");
+                entity.Property(u => u.InsertDate).HasDefaultValueSql("NOW()");
+                entity.HasIndex(u => u.Name).IsUnique();
+            });
+
+            modelBuilder.Entity<CharacterGame>().ToTable("characterGame")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
             modelBuilder.Entity<League>().ToTable("leagues")

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TournamentWinner.Api.Data;
@@ -11,9 +12,11 @@ using TournamentWinner.Api.Data;
 namespace twapi.Migrations
 {
     [DbContext(typeof(CommunityContext))]
-    partial class CommunityContextModelSnapshot : ModelSnapshot
+    [Migration("20230506034247_FixGameCharacterRelations")]
+    partial class FixGameCharacterRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,10 +188,6 @@ namespace twapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CharacterId"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -200,10 +199,7 @@ namespace twapi.Migrations
 
                     b.HasKey("CharacterId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("character", (string)null);
+                    b.ToTable("characters", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.CharacterGame", b =>
