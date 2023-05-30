@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TournamentWinner.Api.Data;
@@ -11,9 +12,11 @@ using TournamentWinner.Api.Data;
 namespace twapi.Migrations
 {
     [DbContext(typeof(CommunityContext))]
-    partial class CommunityContextModelSnapshot : ModelSnapshot
+    [Migration("20230506034101_MapTableCharacterGame")]
+    partial class MapTableCharacterGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace twapi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CharacterGame", b =>
+                {
+                    b.Property<int>("CharactersCharacterId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GamesGameId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CharactersCharacterId", "GamesGameId");
+
+                    b.HasIndex("GamesGameId");
+
+                    b.ToTable("CharacterGame");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -185,10 +203,6 @@ namespace twapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CharacterId"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -200,10 +214,7 @@ namespace twapi.Migrations
 
                     b.HasKey("CharacterId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("character", (string)null);
+                    b.ToTable("characters", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.CharacterGame", b =>
@@ -719,6 +730,21 @@ namespace twapi.Migrations
                     b.ToTable("userCharacters", (string)null);
                 });
 
+            modelBuilder.Entity("CharacterGame", b =>
+                {
+                    b.HasOne("TournamentWinner.Api.Models.Character", null)
+                        .WithMany()
+                        .HasForeignKey("CharactersCharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TournamentWinner.Api.Models.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GamesGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -780,13 +806,13 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.CharacterGame", b =>
                 {
                     b.HasOne("TournamentWinner.Api.Models.Character", "Character")
-                        .WithMany("CharacterGames")
+                        .WithMany()
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
-                        .WithMany("GameCharacters")
+                        .WithMany()
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1000,11 +1026,6 @@ namespace twapi.Migrations
                     b.Navigation("Sets");
                 });
 
-            modelBuilder.Entity("TournamentWinner.Api.Models.Character", b =>
-                {
-                    b.Navigation("CharacterGames");
-                });
-
             modelBuilder.Entity("TournamentWinner.Api.Models.Community", b =>
                 {
                     b.Navigation("Games");
@@ -1026,11 +1047,6 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.CommunityUser", b =>
                 {
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("TournamentWinner.Api.Models.Game", b =>
-                {
-                    b.Navigation("GameCharacters");
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Ranking", b =>
