@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import type Community from '$lib/models/community';
+    import type Community from '$lib/models/repo/community';
     import TextInput from '$lib/comp/TextInput.svelte';
     export let data: PageData;
 

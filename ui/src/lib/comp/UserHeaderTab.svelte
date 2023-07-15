@@ -22,7 +22,7 @@
     {:else}
     <div>
         <span>Guest 
-            <a href="/account/login">Sign in</a> | <a href="/account/register">Register</a>
+            <a href="/auth/signin">Sign in</a>
         </span>
     </div>
     {/if}
