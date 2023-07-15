@@ -1,6 +1,5 @@
 <script>
 	import UserHeaderTab from "$lib/comp/UserHeaderTab.svelte";
-
 </script>
 <body>
     <div class="app-body">
@@ -20,6 +19,58 @@
     </div>
 </body>
 <style lang="scss">
+    :global{
+        * { 
+            font-family: $base-font-family;
+        }
+        .app-body {
+            display:grid;
+            @media (min-width:$large-breakpoint){
+                grid-template-areas: "main-nav main-nav main-nav" "left-pad body-content right-pad";
+                grid-template-rows: $size6 1fr;
+                grid-template-columns: 1fr 5fr 1fr;
+            }
+            @media (min-width:$small-breakpoint) and (max-width:$large-breakpoint){
+                grid-template-areas: "main-nav" "body-content";
+                grid-template-rows: minmax($size1,$size6) 1fr;
+                grid-template-columns: 1fr;
+            }
+            
+            .main-nav {
+                grid-area:main-nav;
+            }
+            .body-wrapper {
+                grid-area: body-content;
+            }
+        }
+        .content {
+            display:grid;
+            @media (min-width:$large-breakpoint){
+                grid-template-areas: "title title" "content-nav content-body";
+                grid-template-columns: 10rem 1fr;
+            }
+            @media (max-width:$large-breakpoint){
+                grid-template-areas: "title" "content-nav" "content-body";
+            }
+        }
+
+        .grid-title {
+            grid-area: title;
+        }
+        .grid-content-nav {
+            grid-area: content-nav;
+        }
+        .grid-content-body {
+            grid-area: content-body;
+        }
+        .grid-content {
+            grid-area: content-nav / content-nav / content-body / content-body;
+        }
+
+        .form-input {
+            margin-bottom:$size3;
+        }
+    }
     body {
         margin:0;
     }

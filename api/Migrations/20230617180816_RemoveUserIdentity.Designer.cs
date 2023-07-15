@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TournamentWinner.Api.Data;
@@ -11,9 +12,11 @@ using TournamentWinner.Api.Data;
 namespace twapi.Migrations
 {
     [DbContext(typeof(CommunityContext))]
-    partial class CommunityContextModelSnapshot : ModelSnapshot
+    [Migration("20230617180816_RemoveUserIdentity")]
+    partial class RemoveUserIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,15 +260,7 @@ namespace twapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GameId"));
 
-                    b.Property<string>("BannerImage")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("IconImage")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -474,9 +469,7 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.User", b =>
                 {
                     b.Property<string>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
@@ -492,45 +485,12 @@ namespace twapi.Migrations
                     b.Property<DateTime>("PlayerCreationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Prefix")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProfileImage")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Tag")
-                        .IsRequired()
+                    b.Property<string>("UsernamePrefix")
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
 
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserAuthMethod", b =>
-                {
-                    b.Property<string>("UserAuthMethodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<int>("AuthMethod")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("AuthValue")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("UserAuthMethodId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("userAuthMethods", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>
@@ -620,7 +580,7 @@ namespace twapi.Migrations
                         .IsRequired();
 
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
-                        .WithMany("CharacterGames")
+                        .WithMany("GameCharacters")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -642,13 +602,13 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.CommunityGame", b =>
                 {
                     b.HasOne("TournamentWinner.Api.Models.Community", "Community")
-                        .WithMany("CommunityGames")
+                        .WithMany("Games")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
-                        .WithMany("CommunityGames")
+                        .WithMany()
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -791,17 +751,6 @@ namespace twapi.Migrations
                     b.Navigation("CommunityGame");
                 });
 
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserAuthMethod", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.User", "User")
-                        .WithMany("UserAuthMethods")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>
                 {
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
@@ -854,7 +803,7 @@ namespace twapi.Migrations
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Community", b =>
                 {
-                    b.Navigation("CommunityGames");
+                    b.Navigation("Games");
 
                     b.Navigation("Players");
 
@@ -877,9 +826,7 @@ namespace twapi.Migrations
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Game", b =>
                 {
-                    b.Navigation("CharacterGames");
-
-                    b.Navigation("CommunityGames");
+                    b.Navigation("GameCharacters");
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Ranking", b =>
@@ -890,8 +837,6 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.User", b =>
                 {
                     b.Navigation("Games");
-
-                    b.Navigation("UserAuthMethods");
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>

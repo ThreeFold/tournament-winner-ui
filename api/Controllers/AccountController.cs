@@ -7,5 +7,5 @@ namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
 public class AccountController {
-
+    
 }

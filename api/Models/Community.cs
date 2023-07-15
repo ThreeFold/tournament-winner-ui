@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-
 namespace TournamentWinner.Api.Models;
 public class Community {
     public int CommunityId {get;set; }
@@ -7,7 +5,7 @@ public class Community {
     public string? Slug {get;set;}
     public string Description {get;set;}
     public User Owner {get;set;}
-    public ICollection<CommunityGame> Games {get;set;}
+    public ICollection<CommunityGame> CommunityGames {get;set;}
     public ICollection<Player> Players {get;set;}
     public ICollection<CommunityUser> Users {get;set;}
     public DateTime InsertDate {get;set;}
@@ -38,16 +36,30 @@ public enum CommunityRoleType {
     Member
 }
 
-public class User : IdentityUser  {
+public class User  {
     public string UserId {get;set;}
-    public string? UsernamePrefix {get;set;}
+    public string? Prefix {get;set;}
+    public string Tag {get;set;}
     public string? FirstName {get;set;}
     public string? LastName {get;set;}
+    public string ProfileImage {get;set;}
     public DateTime PlayerCreationDate {get;set;}
     public ICollection<UserGame> Games {get;set;}
+    public ICollection<UserAuthMethod> UserAuthMethods {get;set;}
     public DateTime InsertDate {get;set;}
 }
-
+public enum AuthMethod {
+    Discord,
+    Gmail,
+    Auth0,
+}
+public class UserAuthMethod {
+    public string UserAuthMethodId {get;set;}
+    public string UserId {get;set;}
+    public string AuthValue {get;set;}
+    public AuthMethod AuthMethod {get;set;}
+    public User User {get;set;}
+}
 public class UserGame {
     public int UserGameId {get;set;}
     public int GameId {get;set;}
@@ -133,7 +145,10 @@ public class Game {
     public string Name {get;set;}
     public string Slug {get;set;}
     public string Description {get;set;}
-    public ICollection<CharacterGame> GameCharacters {get;set;}
+    public string BannerImage {get;set;}
+    public string IconImage {get;set;}
+    public ICollection<CharacterGame> CharacterGames {get;set;}
+    public ICollection<CommunityGame> CommunityGames {get;set;}
     public DateTime ReleaseDate {get;set;}
     public DateTime InsertDate {get;set;}
 }
@@ -150,9 +165,17 @@ public class Character {
     public int CharacterId {get;set;}
     public string Name {get;set;}
     public string Description {get;set;}
-    public ICollection<string> AlternateNames {get;set;}
+    public ICollection<CharacterAlternateName> AlternateNames {get;set;}
     public DateTime InsertDate {get;set;}
     public ICollection<CharacterGame> CharacterGames {get;set;}
+}
+
+public class CharacterAlternateName {
+    public int CharacterAlternateNameId {get;set;}
+    public int CharacterId {get;set;}
+    public string? AlternateName {get;set;}
+
+    public Character Character {get;set;}
 }
 
 public class League {

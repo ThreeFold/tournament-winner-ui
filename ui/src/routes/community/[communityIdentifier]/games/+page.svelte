@@ -1,31 +1,27 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import type { Game } from '$lib/models/player';
-    import type { PageData } from './$types';
+    import type { PageData } from '../$types';
     
     export let data: PageData;
-
-    async function redirectToGame(game: Game){
-        await goto(`${data.communityHref}/games/${game.slug ?? game.id}`);
-    }
 </script>
 
 <div>
     
-    {#if data.games}
+    {#if data}
     <div class="game-list">
-        {#each data.games as game}
-        <div class="game-card" on:click={() => redirectToGame(game)}>
+        {#each data.communityGames as communityGame}
+        <div class="game-card">
             <div class="banner">
-                <img src={game.bannerImg.toString()}/>
+                <img src={communityGame.game.bannerImage} alt="{communityGame.game.title} Banner Image"/>
             </div>
             <div class="body">
-                <div class="game-title">
-                    <span class="icon game-icon"><img src={game.iconImg}/></span>
-                    <span class="game-name">{game.title}</span>
-                </div>
+                <a href="{data.communityHref}/games/{communityGame.game.slug ?? communityGame.game.id}">
+                    <div class="game-title">
+                        <span class="icon game-icon"><img src={communityGame.game.iconImage} alt="{communityGame.game.title} Icon Image" /></span>
+                        <span class="game-name">{communityGame.game.name}</span>
+                    </div>
+                </a>
                 <div class="game-desc">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque hendrerit lorem eget ligula luctus, nec tristique arcu ultrices. Duis placerat nisi eu libero elementum placerat. Sed et dolor facilisis, volutpat ligula vitae, dapibus nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed eleifend erat a massa mollis sollicitudin. Morbi commodo lacinia libero, vel vehicula mauris rutrum eu. Nullam ac tortor erat. 
+                    {communityGame.game.description}    
                 </div>
             </div>
         </div>
@@ -89,9 +85,6 @@
                 overflow:hidden;
                 text-overflow: ellipsis;
             }
-        }
-        &::hover {
-
         }
     }
 </style>
