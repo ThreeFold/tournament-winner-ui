@@ -11,15 +11,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CommunityContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options =>
-    {
-        options.Authority = "https://dev-80ja08wntnvjbfkt.us.auth0.com/";
-        options.Audience = "https://tournament-winner/api";
-    });
+// builder.Services.AddAuthentication(options =>
+//     {
+//         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//     }).AddJwtBearer(options =>
+//     {
+//         options.Authority = "https://dev-80ja08wntnvjbfkt.us.auth0.com/";
+//         options.Audience = "http://tournament-winner/api";
+//     });
 
 builder.Services.AddControllers();
 var app = builder.Build();

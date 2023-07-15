@@ -1,5 +1,5 @@
 <script lang="ts">
-import type Community from '$lib/models/community';
+import type Community from '$lib/models/repo/community';
 import type { PageData } from './$types';
 
 export let data: PageData;

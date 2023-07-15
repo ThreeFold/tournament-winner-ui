@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import type Community from "$lib/models/community";
+	import type Community from "$lib/models/repo/community";
 
     export let community: Community
 

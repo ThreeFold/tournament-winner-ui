@@ -8,6 +8,6 @@ export const load = (async ({params}) => {
             communityGames: communityGames
         };
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 }) satisfies PageServerLoad;

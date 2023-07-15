@@ -1,4 +1,4 @@
-import type { GameCharacter } from "./player";
+import type { GameCharacter } from "../player";
 
 export default interface Game {
     id: number;

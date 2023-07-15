@@ -1,6 +1,6 @@
 <script lang="ts">
 import { page } from "$app/stores";
-import type Community from "$lib/models/community";
+import type Community from "$lib/models/repo/community";
 import type { LayoutData } from "./$types";
 
 export let data: LayoutData;
@@ -28,6 +28,7 @@ $: communitySubPages = [
 ];
 $: pathname = $page.url.pathname;
 $: activeSubPage = communitySubPages.find(v => v.Url?.includes(pathname));
+
 </script>
 <div class="content-header">
     <h1>{data.community?.name}</h1>

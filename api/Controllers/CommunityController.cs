@@ -50,13 +50,18 @@ public class CommunityController : ControllerBase {
                     CommunityId = cg.Community.CommunityId,
                     Name = cg.Community.Name,
                     Owner = new User {
-                        FirstName = cg.Community.Owner.FirstName,
-                        LastName = cg.Community.Owner.LastName,
                         InsertDate = cg.Community.Owner.InsertDate,
-                        PlayerCreationDate = cg.Community.Owner.PlayerCreationDate,
-                        Tag = cg.Community.Owner.Tag,
-                        Prefix = cg.Community.Owner.Prefix,
+                        UserCreationDate = cg.Community.Owner.UserCreationDate,
                         UserId = cg.Community.Owner.UserId,
+                        Profile = new Profile {
+                            FirstName = cg.Community.Owner.Profile.FirstName,
+                            LastName = cg.Community.Owner.Profile.LastName,
+                            Handle = cg.Community.Owner.Profile.Handle,
+                            Prefix = cg.Community.Owner.Profile.Prefix,
+                            ProfileId = cg.Community.Owner.Profile.ProfileId,
+                            InsertDate = cg.Community.Owner.Profile.InsertDate,
+                            ProfileImage = cg.Community.Owner.Profile.ProfileImage,                            
+                        }
                     },
                     Slug = cg.Community.Slug,
                     InsertDate = cg.Community.InsertDate,
