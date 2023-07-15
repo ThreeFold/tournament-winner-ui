@@ -36,10 +36,16 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<UserAuthMethod>().ToTable("userAuthMethods")
             .Property(u => u.UserAuthMethodId)
             .HasDefaultValueSql("gen_random_uuid()");
-            modelBuilder.Entity<UserGame>().ToTable("userGames")
+            modelBuilder.Entity<Profile>().ToTable("profiles")
+            .Property(p => p.InsertDate)
+            .HasDefaultValueSql("NOW()");
+            modelBuilder.Entity<Profile>().ToTable("profiles")
+            .Property(p => p.ProfileId)
+            .HasDefaultValueSql("gen_random_uuid()");
+            modelBuilder.Entity<ProfileGame>().ToTable("userGames")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<UserGameCharacter>().ToTable("userCharacters")
+            modelBuilder.Entity<ProfileGameCharacter>().ToTable("userCharacters")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
             modelBuilder.Entity<Player>().ToTable("players")

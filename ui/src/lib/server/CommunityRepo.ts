@@ -1,6 +1,6 @@
-import type Community from "$lib/models/community";
 import { PUBLIC_APP_API_BASE } from '$env/static/public';
 import type { CommunityGame } from "$lib/models/player";
+import type Community from '$lib/models/repo/community';
 
 export async function getCommunityList(): Promise<Array<Community>>{
         try {
@@ -8,7 +8,7 @@ export async function getCommunityList(): Promise<Array<Community>>{
             const communities = await response.json() as Array<Community>;
             return communities;
         } catch (e){
-            console.log(e);
+            console.error(e);
         }
         return new Array<Community>();
 }

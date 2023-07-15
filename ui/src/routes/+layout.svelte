@@ -1,23 +1,21 @@
 <script>
 	import UserHeaderTab from "$lib/comp/UserHeaderTab.svelte";
 </script>
-<body>
-    <div class="app-body">
-        <nav class="main-nav">
-            <a href="/">Home</a>
-            <a href="/community">Communities</a>
-            <a href="/ranks">Rankings</a>
-            <a href="/vod">VODs</a>
-            <a href="/account">Account</a>
-            <UserHeaderTab class="pull-right"></UserHeaderTab>
-        </nav>
-        <div class="body-wrapper">
-            <div class="content">
-                <slot></slot>
-            </div>
+<div class="app-body">
+    <nav class="main-nav">
+        <a href="/">Home</a>
+        <a href="/community">Communities</a>
+        <a href="/ranks">Rankings</a>
+        <a href="/vod">VODs</a>
+        <a href="/account">Account</a>
+        <UserHeaderTab class="pull-right"></UserHeaderTab>
+    </nav>
+    <div class="body-wrapper">
+        <div class="content">
+            <slot></slot>
         </div>
     </div>
-</body>
+</div>
 <style lang="scss">
     :global{
         * { 
@@ -70,9 +68,6 @@
         .form-input {
             margin-bottom:$size3;
         }
-    }
-    body {
-        margin:0;
     }
     .main-nav {
         display:flex;
