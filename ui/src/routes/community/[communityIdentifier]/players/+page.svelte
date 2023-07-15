@@ -1,9 +1,5 @@
 <script lang="ts">
-import type { Character, Game } from "$lib/models/player";
-import type Player from "$lib/models/player";
-import type { PageData } from ".svelte-kit/types/src/routes/$types";
-
-
+import type { PageData } from '../$types';
 export let data: PageData;
 
 console.log(data);

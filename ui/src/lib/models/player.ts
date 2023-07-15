@@ -1,3 +1,6 @@
+import type Game from "./Game";
+import type Community from "./community";
+
 export default interface Player {
     id: string;
     usernamePrefix?: string;
@@ -17,22 +20,16 @@ export interface PlayerGameCharacter {
 }
 export interface User {
     id: string;
-    name: string;
-}
-export interface Game {
-    id: number;
-    slug?: string;
-    title: string;
-    bannerImg: string;
-    iconImg: string;
-
-    characters: Array<GameCharacter>;
+    prefix: string | null;
+    tag: string;
+    firstName: string;
+    lastName: string;
+    profileImage: string | null;
 }
 export interface Character {
     id: number;
     name: string;
     description?: string;
-
     games: Array<GameCharacter>;
 }
 export interface GameCharacter {
@@ -42,4 +39,12 @@ export interface GameCharacter {
     character: Character;
     description?: string;
     wikiLink?: string;
+}
+
+export interface CommunityGame {
+    communityGameId: number;
+    community: Community;
+    owner: User;
+    game: Game;
+    insertDate: Date;
 }

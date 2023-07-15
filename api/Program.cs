@@ -33,6 +33,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "api/{controller=Community}/{action=Index}/{id?}");
+// app.UseAuthentication();
 
 app.Run();

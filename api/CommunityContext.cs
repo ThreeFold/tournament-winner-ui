@@ -1,19 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Data
 {
-    public class CommunityContext : IdentityDbContext<User>
+    public class CommunityContext : DbContext
     {
         public CommunityContext(DbContextOptions options)
         : base(options)
         {
         }
         public DbSet<Community> Communities {get;set;}
+        public DbSet<CommunityGame> CommunityGames {get;set;}
         public DbSet<Player> Players {get;set;}
         public DbSet<Game> Games {get;set;}
         public DbSet<CommunityUser> CommunityUsers {get;set;}
+        public DbSet<User> Users {get;set;}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -29,6 +30,12 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<User>().ToTable("users")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
+            modelBuilder.Entity<User>().ToTable("users")
+            .Property(u => u.UserId)
+            .HasDefaultValueSql("gen_random_uuid()");
+            modelBuilder.Entity<UserAuthMethod>().ToTable("userAuthMethods")
+            .Property(u => u.UserAuthMethodId)
+            .HasDefaultValueSql("gen_random_uuid()");
             modelBuilder.Entity<UserGame>().ToTable("userGames")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");

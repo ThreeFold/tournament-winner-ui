@@ -13,31 +13,31 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.25.0",
-		"@sveltejs/adapter-auto": "^1.0.0",
-		"@sveltejs/kit": "^1.0.1",
-		"@types/oidc-provider": "^8.0.0",
+		"@playwright/test": "^1.35.1",
+		"@sveltejs/adapter-auto": "^2.1.0",
+		"@sveltejs/kit": "^1.0.0",
+		"@types/oidc-provider": "^8.2.0",
 		"@types/openid-client": "^3.7.0",
-		"@typescript-eslint/eslint-plugin": "^5.27.0",
-		"@typescript-eslint/parser": "^5.27.0",
-		"eslint": "^8.16.0",
-		"eslint-config-prettier": "^8.3.0",
+		"@typescript-eslint/eslint-plugin": "^5.60.1",
+		"@typescript-eslint/parser": "^5.60.1",
+		"eslint": "^8.44.0",
+		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"prettier": "^2.6.2",
-		"prettier-plugin-svelte": "^2.7.0",
-		"sass": "^1.55.0",
-		"svelte": "^3.44.0",
-		"svelte-check": "^3.0.1",
-		"svelte-preprocess": "^5.0.0",
-		"tslib": "^2.3.1",
-		"typescript": "^4.7.4",
-		"vite": "^4.2.3"
+		"prettier": "^2.8.8",
+		"prettier-plugin-svelte": "^2.10.1",
+		"sass": "^1.63.6",
+		"svelte": "^3.54.0",
+		"svelte-check": "^3.4.4",
+		"svelte-preprocess": "^5.0.4",
+		"tslib": "^2.6.0",
+		"typescript": "^5.1.6",
+		"vite": "^4.3.9"
 	},
 	"type": "module",
 	"dependencies": {
-		"@auth/core": "^0.5.1",
-		"@auth/sveltekit": "^0.3.0",
-		"@supabase/supabase-js": "^2.8.0",
-		"openid-client": "^5.3.1"
+		"@auth/core": "^0.9.0",
+		"@auth/sveltekit": "^0.3.2",
+		"@supabase/supabase-js": "^2.26.0",
+		"openid-client": "^5.4.2"
 	}
 }
