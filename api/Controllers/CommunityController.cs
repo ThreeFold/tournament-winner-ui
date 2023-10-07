@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
@@ -50,18 +52,7 @@ public class CommunityController : ControllerBase {
                     CommunityId = cg.Community.CommunityId,
                     Name = cg.Community.Name,
                     Owner = new User {
-                        InsertDate = cg.Community.Owner.InsertDate,
-                        UserCreationDate = cg.Community.Owner.UserCreationDate,
                         UserId = cg.Community.Owner.UserId,
-                        Profile = new Profile {
-                            FirstName = cg.Community.Owner.Profile.FirstName,
-                            LastName = cg.Community.Owner.Profile.LastName,
-                            Handle = cg.Community.Owner.Profile.Handle,
-                            Prefix = cg.Community.Owner.Profile.Prefix,
-                            ProfileId = cg.Community.Owner.Profile.ProfileId,
-                            InsertDate = cg.Community.Owner.Profile.InsertDate,
-                            ProfileImage = cg.Community.Owner.Profile.ProfileImage,                            
-                        }
                     },
                     Slug = cg.Community.Slug,
                     InsertDate = cg.Community.InsertDate,
@@ -81,9 +72,50 @@ public class CommunityController : ControllerBase {
             });
     }
 
+    [HttpGet("{communityId}/game/{gameId}")]
+    public async Task<IActionResult> GetGame(string communityId, string gameId)
+    {
+        Game? game = await GetGame(gameId);
+        Community? community = await GetCommunity(communityId);
+
+        if(game == null)
+        {
+            return NotFound("Game not found");
+        }
+        if(community == null)
+        {
+            return NotFound("Community not found");
+        }
+
+        var communityGame = await this._context.CommunityGames.FirstOrDefaultAsync(cg => cg.CommunityId == community.CommunityId && cg.GameId == game.GameId);
+
+        if(communityGame == null){
+            return NotFound("Community does not play this game");
+        }
+        return Ok(new CommunityGame(){
+            GameId = game.GameId,
+            Game = new Game()
+        });
+    }
+
+    private async Task<Community?> GetCommunity(string communityId){
+        if(int.TryParse(communityId, out var communityActualId)){
+            return await this._context.Communities.FirstOrDefaultAsync(c => c.CommunityId == communityActualId);
+        }
+        return await this._context.Communities.FirstOrDefaultAsync(c => c.Slug == communityId);
+
+    }
+
+    private async Task<Game?> GetGame(string gameId){
+        if(int.TryParse(gameId, out var gameActualId)){
+            return await this._context.Games.FirstOrDefaultAsync(g => g.GameId == gameActualId);
+        }
+        return await this._context.Games.FirstOrDefaultAsync(g => g.Slug == gameId);
+    }
+
     [HttpGet("{communityId}")]
     public Task<Community?> Get(string communityId){
-        //communityId can be the slag or actual id, resolve to one
+        //communityId can be the slug or actual id, resolve to one
         if(int.TryParse(communityId, out var communityActualId)){
             return this._context.Communities.FirstOrDefaultAsync(c => c.CommunityId == communityActualId);
         }
