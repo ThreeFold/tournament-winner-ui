@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/api/bin/Debug/net6.0/twapi.dll",
+            "program": "${workspaceFolder}/api/bin/Debug/net8.0/twapi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/api",
             "stopAtEntry": false,
