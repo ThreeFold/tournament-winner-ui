@@ -4,16 +4,16 @@ using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Controllers;
 public class SignInViewModel {
-    public string Id {get;set;}
-    public string Email {get;set;}
+    public string AuthProviderId {get;set;}
+    public string AuthValue {get;set;}
 }
 
 public class UserCreateViewModel {
 
     public string Username {get;set;}
     public string Email {get;set;}
-    public AuthMethod AuthMethod {get;set;}
-    public string AuthMethodValue{get;set;}
+    public string AuthProviderId {get;set;}
+    public string AuthValue {get;set;}
 }
 
 [ApiController]
@@ -25,24 +25,31 @@ public class UserController {
         this._context = context;
     }
     
-    [HttpPost("DiscordSignIn")]
-    public ActionResult<User> DiscordSignIn(SignInViewModel signInDetails){
-        var user = _context.Users.FirstOrDefault(u => u.UserAuthMethods.Any(uam => uam.AuthMethod == AuthMethod.Discord && uam.AuthValue == signInDetails.Id));
-        if(user == null){
-            return new StatusCodeResult(StatusCodes.Status404NotFound);
-        }
-        return user;
+    [HttpPost("signin")]
+    public ActionResult<User?> SignIn(SignInViewModel signInViewModel) {
+        var user = _context.Users.FirstOrDefault(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == signInViewModel.AuthProviderId && uam.AuthValue == signInViewModel.AuthValue));
+        if(user == null)
+            return null;
+        
+        return new User(){
+            Email = user.Email,
+            UserCreationDate = user.UserCreationDate,
+            Profile = new Profile {
+                Handle = user.Profile?.Handle,
+                
+            }
+        };
     }
     
     [HttpPost("register")]
     public async Task<User?> CreateAccount(UserCreateViewModel userToCreate){
         var user = new User(){
             Email = userToCreate.Email,
-            UserCreationDate = DateTime.Now,
+            UserCreationDate = DateTime.UtcNow,
             UserAuthMethods = new List<UserAuthMethod>(){
                 new UserAuthMethod(){
-                    AuthMethod = userToCreate.AuthMethod,
-                    AuthValue = userToCreate.AuthMethodValue
+                    AuthProviderId = userToCreate.AuthProviderId,
+                    AuthValue = userToCreate.AuthValue
                 }
             }
         };

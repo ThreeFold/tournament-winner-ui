@@ -1,18 +1,17 @@
 
 import { PUBLIC_APP_API_BASE } from '$env/static/public';
-import type { AuthMethod } from '$lib/enum/AuthMethod';
 import type { User } from '$lib/models/player';
 
 export class UserCreateViewModel{
     username: string;
     email: string;
-    authMethod: AuthMethod;
-    authMethodValue: string;
-    constructor(username: string, email: string, authMethod: AuthMethod, authMethodValue: string){
+    authProviderId: string;
+    authValue: string;
+    constructor(username: string, email: string, authProviderId: string, authMethodValue: string){
         this.username = username;
         this.email = email;
-        this.authMethod = authMethod;
-        this.authMethodValue = authMethodValue;
+        this.authProviderId = authProviderId;
+        this.authValue = authMethodValue;
     }
 }
 
@@ -33,13 +32,13 @@ export async function registerUser(userToCreate: UserCreateViewModel): Promise<U
     return null;
 }
 
-export async function getUserFromDiscordToken(discordId: string, email: string): Promise<User | null>{
+export async function getUser(authProviderId: string, authValue: string): Promise<User | null>{
     const signInDetails = JSON.stringify({
-        id: discordId,
-        email: email,
+        authProviderId,
+        authValue,
     });
     try{
-        const response = await fetch(`${PUBLIC_APP_API_BASE}/user/DiscordSignIn`,
+        const response = await fetch(`${PUBLIC_APP_API_BASE}/user/signin`,
         {
             body: signInDetails,
             method: "POST",
