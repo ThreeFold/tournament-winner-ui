@@ -30,6 +30,9 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<User>().ToTable("users")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
             modelBuilder.Entity<User>().ToTable("users")
             .Property(u => u.UserId)
             .HasDefaultValueSql("gen_random_uuid()");

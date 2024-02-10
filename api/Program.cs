@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,11 @@ builder.Services.AddDbContext<CommunityContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => 
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

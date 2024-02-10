@@ -7,11 +7,26 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace twapi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "character",
+                columns: table => new
+                {
+                    CharacterId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_character", x => x.CharacterId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "games",
                 columns: table => new
@@ -21,6 +36,8 @@ namespace twapi.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Slug = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    BannerImage = table.Column<string>(type: "text", nullable: false),
+                    IconImage = table.Column<string>(type: "text", nullable: false),
                     ReleaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
@@ -33,11 +50,9 @@ namespace twapi.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    UsernamePrefix = table.Column<string>(type: "text", nullable: true),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
-                    PlayerCreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    UserCreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
@@ -46,23 +61,51 @@ namespace twapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "characters",
+                name: "CharacterAlternateName",
                 columns: table => new
                 {
-                    CharacterId = table.Column<int>(type: "integer", nullable: false)
+                    CharacterAlternateNameId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
-                    GameId = table.Column<int>(type: "integer", nullable: true)
+                    CharacterId = table.Column<int>(type: "integer", nullable: false),
+                    AlternateName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_characters", x => x.CharacterId);
+                    table.PrimaryKey("PK_CharacterAlternateName", x => x.CharacterAlternateNameId);
                     table.ForeignKey(
-                        name: "FK_characters_games_GameId",
+                        name: "FK_CharacterAlternateName_character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "character",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "characterGame",
+                columns: table => new
+                {
+                    CharacterGameId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CharacterId = table.Column<int>(type: "integer", nullable: false),
+                    GameId = table.Column<int>(type: "integer", nullable: false),
+                    UniqueIdentifier = table.Column<string>(type: "text", nullable: true),
+                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_characterGame", x => x.CharacterGameId);
+                    table.ForeignKey(
+                        name: "FK_characterGame_character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "character",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_characterGame_games_GameId",
                         column: x => x.GameId,
                         principalTable: "games",
-                        principalColumn: "GameId");
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,26 +131,42 @@ namespace twapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "userGames",
+                name: "profiles",
                 columns: table => new
                 {
-                    UserGameId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    GameId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ProfileId = table.Column<string>(type: "text", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Prefix = table.Column<string>(type: "text", nullable: true),
+                    Handle = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    ProfileImage = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
                     InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_userGames", x => x.UserGameId);
+                    table.PrimaryKey("PK_profiles", x => x.ProfileId);
                     table.ForeignKey(
-                        name: "FK_userGames_games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_profiles_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userAuthMethods",
+                columns: table => new
+                {
+                    UserAuthMethodId = table.Column<string>(type: "text", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    AuthValue = table.Column<string>(type: "text", nullable: false),
+                    AuthProviderId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userAuthMethods", x => x.UserAuthMethodId);
                     table.ForeignKey(
-                        name: "FK_userGames_users_UserId",
+                        name: "FK_userAuthMethods_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "UserId",
@@ -169,66 +228,30 @@ namespace twapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "players",
+                name: "userGames",
                 columns: table => new
                 {
-                    PlayerId = table.Column<int>(type: "integer", nullable: false)
+                    ProfileGameId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GameId = table.Column<int>(type: "integer", nullable: false),
-                    UserGameId = table.Column<int>(type: "integer", nullable: false),
-                    prefix = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
-                    CommunityId = table.Column<int>(type: "integer", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ProfileId = table.Column<string>(type: "text", nullable: true),
+                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_players", x => x.PlayerId);
+                    table.PrimaryKey("PK_userGames", x => x.ProfileGameId);
                     table.ForeignKey(
-                        name: "FK_players_communities_CommunityId",
-                        column: x => x.CommunityId,
-                        principalTable: "communities",
-                        principalColumn: "CommunityId");
-                    table.ForeignKey(
-                        name: "FK_players_games_GameId",
+                        name: "FK_userGames_games_GameId",
                         column: x => x.GameId,
                         principalTable: "games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_players_userGames_UserGameId",
-                        column: x => x.UserGameId,
-                        principalTable: "userGames",
-                        principalColumn: "UserGameId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "userCharacters",
-                columns: table => new
-                {
-                    UserGameCharacterId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserGameId = table.Column<int>(type: "integer", nullable: false),
-                    CharacterId = table.Column<int>(type: "integer", nullable: false),
-                    Order = table.Column<int>(type: "integer", nullable: false),
-                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_userCharacters", x => x.UserGameCharacterId);
-                    table.ForeignKey(
-                        name: "FK_userCharacters_characters_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "characters",
-                        principalColumn: "CharacterId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_userCharacters_userGames_UserGameId",
-                        column: x => x.UserGameId,
-                        principalTable: "userGames",
-                        principalColumn: "UserGameId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_userGames_profiles_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "profiles",
+                        principalColumn: "ProfileId");
                 });
 
             migrationBuilder.CreateTable(
@@ -323,6 +346,62 @@ namespace twapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "players",
+                columns: table => new
+                {
+                    PlayerId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Prefix = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    ProfileGameId = table.Column<int>(type: "integer", nullable: false),
+                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    CommunityId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_players", x => x.PlayerId);
+                    table.ForeignKey(
+                        name: "FK_players_communities_CommunityId",
+                        column: x => x.CommunityId,
+                        principalTable: "communities",
+                        principalColumn: "CommunityId");
+                    table.ForeignKey(
+                        name: "FK_players_userGames_ProfileGameId",
+                        column: x => x.ProfileGameId,
+                        principalTable: "userGames",
+                        principalColumn: "ProfileGameId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userCharacters",
+                columns: table => new
+                {
+                    ProfileGameCharacterId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProfileGameId = table.Column<int>(type: "integer", nullable: false),
+                    CharacterId = table.Column<int>(type: "integer", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false),
+                    InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userCharacters", x => x.ProfileGameCharacterId);
+                    table.ForeignKey(
+                        name: "FK_userCharacters_character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "character",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_userCharacters_userGames_ProfileGameId",
+                        column: x => x.ProfileGameId,
+                        principalTable: "userGames",
+                        principalColumn: "ProfileGameId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "gameSets",
                 columns: table => new
                 {
@@ -345,15 +424,15 @@ namespace twapi.Migrations
                         principalColumn: "BracketId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_gameSets_characters_Player1CharacterId",
+                        name: "FK_gameSets_character_Player1CharacterId",
                         column: x => x.Player1CharacterId,
-                        principalTable: "characters",
+                        principalTable: "character",
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_gameSets_characters_Player2CharacterId",
+                        name: "FK_gameSets_character_Player2CharacterId",
                         column: x => x.Player2CharacterId,
-                        principalTable: "characters",
+                        principalTable: "character",
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -403,8 +482,24 @@ namespace twapi.Migrations
                 column: "CommunityGameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_characters_GameId",
-                table: "characters",
+                name: "IX_character_Name",
+                table: "character",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterAlternateName_CharacterId",
+                table: "CharacterAlternateName",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_characterGame_CharacterId",
+                table: "characterGame",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_characterGame_GameId",
+                table: "characterGame",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
@@ -478,14 +573,15 @@ namespace twapi.Migrations
                 column: "CommunityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_players_GameId",
+                name: "IX_players_ProfileGameId",
                 table: "players",
-                column: "GameId");
+                column: "ProfileGameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_players_UserGameId",
-                table: "players",
-                column: "UserGameId");
+                name: "IX_profiles_UserId",
+                table: "profiles",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_rankings_CommunityGameId",
@@ -503,14 +599,19 @@ namespace twapi.Migrations
                 column: "RankingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_userAuthMethods_UserId",
+                table: "userAuthMethods",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_userCharacters_CharacterId",
                 table: "userCharacters",
                 column: "CharacterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_userCharacters_UserGameId",
+                name: "IX_userCharacters_ProfileGameId",
                 table: "userCharacters",
-                column: "UserGameId");
+                column: "ProfileGameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_userGames_GameId",
@@ -518,14 +619,20 @@ namespace twapi.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_userGames_UserId",
+                name: "IX_userGames_ProfileId",
                 table: "userGames",
-                column: "UserId");
+                column: "ProfileId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CharacterAlternateName");
+
+            migrationBuilder.DropTable(
+                name: "characterGame");
+
             migrationBuilder.DropTable(
                 name: "communityUserRoles");
 
@@ -537,6 +644,9 @@ namespace twapi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ranks");
+
+            migrationBuilder.DropTable(
+                name: "userAuthMethods");
 
             migrationBuilder.DropTable(
                 name: "userCharacters");
@@ -554,13 +664,16 @@ namespace twapi.Migrations
                 name: "rankings");
 
             migrationBuilder.DropTable(
-                name: "characters");
+                name: "character");
 
             migrationBuilder.DropTable(
                 name: "userGames");
 
             migrationBuilder.DropTable(
                 name: "communityGames");
+
+            migrationBuilder.DropTable(
+                name: "profiles");
 
             migrationBuilder.DropTable(
                 name: "communities");
