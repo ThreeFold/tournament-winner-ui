@@ -587,6 +587,9 @@ namespace twapi.Migrations
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("users", (string)null);
                 });
 

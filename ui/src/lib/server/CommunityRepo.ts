@@ -4,7 +4,8 @@ import type Community from '$lib/models/repo/community';
 
 export async function getCommunityList(): Promise<Array<Community>>{
         try {
-            const response = await fetch(`${PUBLIC_APP_API_BASE}/community/list`);
+            const url = new URL(`community/list`, PUBLIC_APP_API_BASE);
+            const response = await fetch(url);
             const communities = await response.json() as Array<Community>;
             return communities;
         } catch (e){
@@ -14,8 +15,10 @@ export async function getCommunityList(): Promise<Array<Community>>{
 }
 
 export async function getCommunity(id: string|number): Promise<Community | null> {
-    try {
-        const response = await fetch(`${PUBLIC_APP_API_BASE}/community/${id}`);
+    try {        
+        const url = new URL(`community/${id}`, PUBLIC_APP_API_BASE);
+        const response = await fetch(url);
+        console.log(response);
         const community = await response.json() as Community;
         return community
     } catch(e){
@@ -27,7 +30,8 @@ export async function getCommunity(id: string|number): Promise<Community | null>
 export async function getCommunityGames(id: string|number): Promise<Array<CommunityGame>>{
 
     try{
-        const response = await fetch(`${PUBLIC_APP_API_BASE}/community/${id}/games`);
+        const url = new URL(`community/${id}/games`, PUBLIC_APP_API_BASE);
+        const response = await fetch(url);
         const communityGames = await response.json() as Array<CommunityGame>;
         return communityGames;
     } catch(e){

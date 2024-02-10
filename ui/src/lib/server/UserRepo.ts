@@ -17,13 +17,17 @@ export class UserCreateViewModel{
 
 export async function registerUser(userToCreate: UserCreateViewModel): Promise<User | null> {
     try {
-        const response = await fetch(`${PUBLIC_APP_API_BASE}/user/register`, {
+        console.log(userToCreate);
+        const url = new URL("user/register", PUBLIC_APP_API_BASE);
+        console.log(url);
+        const response = await fetch(url, {
             body: JSON.stringify(userToCreate),
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             }
         });
+        console.log(response);
         return await response.json() as User;
     }
     catch (e){
@@ -38,7 +42,8 @@ export async function getUser(authProviderId: string, authValue: string): Promis
         authValue,
     });
     try{
-        const response = await fetch(`${PUBLIC_APP_API_BASE}/user/signin`,
+        const url = new URL("user/signin", PUBLIC_APP_API_BASE);
+        const response = await fetch(url,
         {
             body: signInDetails,
             method: "POST",

@@ -12,165 +12,18 @@ using TournamentWinner.Api.Data;
 namespace twapi.Migrations
 {
     [DbContext(typeof(CommunityContext))]
-    [Migration("20230506033843_GameCharacter")]
-    partial class GameCharacter
+    [Migration("20240210003722_UniqueEmailUser")]
+    partial class UniqueEmailUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("CharacterGame", b =>
-                {
-                    b.Property<int>("CharactersCharacterId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GamesGameId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CharactersCharacterId", "GamesGameId");
-
-                    b.HasIndex("GamesGameId");
-
-                    b.ToTable("CharacterGame");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Bracket", b =>
                 {
@@ -203,6 +56,10 @@ namespace twapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CharacterId"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -214,7 +71,62 @@ namespace twapi.Migrations
 
                     b.HasKey("CharacterId");
 
-                    b.ToTable("characters", (string)null);
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("character", (string)null);
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.CharacterAlternateName", b =>
+                {
+                    b.Property<int>("CharacterAlternateNameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CharacterAlternateNameId"));
+
+                    b.Property<string>("AlternateName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CharacterAlternateNameId");
+
+                    b.HasIndex("CharacterId");
+
+                    b.ToTable("CharacterAlternateName");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.CharacterGame", b =>
+                {
+                    b.Property<int>("CharacterGameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CharacterGameId"));
+
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("InsertDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .HasColumnType("text");
+
+                    b.HasKey("CharacterGameId");
+
+                    b.HasIndex("CharacterId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("characterGame", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Community", b =>
@@ -238,7 +150,7 @@ namespace twapi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OwnerId")
+                    b.Property<string>("OwnerUserId")
                         .HasColumnType("text");
 
                     b.Property<string>("Slug")
@@ -246,7 +158,7 @@ namespace twapi.Migrations
 
                     b.HasKey("CommunityId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("communities", (string)null);
                 });
@@ -348,7 +260,15 @@ namespace twapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GameId"));
 
+                    b.Property<string>("BannerImage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IconImage")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -460,6 +380,76 @@ namespace twapi.Migrations
                     b.Property<int?>("CommunityId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("InsertDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Prefix")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProfileGameId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PlayerId");
+
+                    b.HasIndex("CommunityId");
+
+                    b.HasIndex("ProfileGameId");
+
+                    b.ToTable("players", (string)null);
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.Profile", b =>
+                {
+                    b.Property<string>("ProfileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Handle")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("InsertDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Prefix")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfileImage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("ProfileId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("profiles", (string)null);
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.ProfileGame", b =>
+                {
+                    b.Property<int>("ProfileGameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProfileGameId"));
+
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
 
@@ -468,26 +458,51 @@ namespace twapi.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserGameId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("prefix")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("PlayerId");
-
-                    b.HasIndex("CommunityId");
+                    b.HasKey("ProfileGameId");
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("UserGameId");
+                    b.HasIndex("ProfileId");
 
-                    b.ToTable("players", (string)null);
+                    b.ToTable("userGames", (string)null);
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.ProfileGameCharacter", b =>
+                {
+                    b.Property<int>("ProfileGameCharacterId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProfileGameCharacterId"));
+
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("InsertDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProfileGameId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProfileGameCharacterId");
+
+                    b.HasIndex("CharacterId");
+
+                    b.HasIndex("ProfileGameId");
+
+                    b.ToTable("userCharacters", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Rank", b =>
@@ -556,24 +571,13 @@ namespace twapi.Migrations
 
             modelBuilder.Entity("TournamentWinner.Api.Models.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+                    b.Property<string>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("InsertDate")
@@ -581,188 +585,41 @@ namespace twapi.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
+                    b.Property<DateTime>("UserCreationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                    b.HasKey("UserId");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("PlayerCreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("UsernamePrefix")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>
+            modelBuilder.Entity("TournamentWinner.Api.Models.UserAuthMethod", b =>
                 {
-                    b.Property<int>("UserGameId")
+                    b.Property<string>("UserAuthMethodId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("text")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserGameId"));
+                    b.Property<string>("AuthProviderId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("InsertDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
+                    b.Property<string>("AuthValue")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("UserGameId");
-
-                    b.HasIndex("GameId");
+                    b.HasKey("UserAuthMethodId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("userGames", (string)null);
-                });
-
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserGameCharacter", b =>
-                {
-                    b.Property<int>("UserGameCharacterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserGameCharacterId"));
-
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("InsertDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserGameId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserGameCharacterId");
-
-                    b.HasIndex("CharacterId");
-
-                    b.HasIndex("UserGameId");
-
-                    b.ToTable("userCharacters", (string)null);
-                });
-
-            modelBuilder.Entity("CharacterGame", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.Character", null)
-                        .WithMany()
-                        .HasForeignKey("CharactersCharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TournamentWinner.Api.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesGameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TournamentWinner.Api.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("userAuthMethods", (string)null);
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Bracket", b =>
@@ -772,11 +629,41 @@ namespace twapi.Migrations
                         .HasForeignKey("CommunityGameId");
                 });
 
+            modelBuilder.Entity("TournamentWinner.Api.Models.CharacterAlternateName", b =>
+                {
+                    b.HasOne("TournamentWinner.Api.Models.Character", "Character")
+                        .WithMany("AlternateNames")
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.CharacterGame", b =>
+                {
+                    b.HasOne("TournamentWinner.Api.Models.Character", "Character")
+                        .WithMany("CharacterGames")
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TournamentWinner.Api.Models.Game", "Game")
+                        .WithMany("CharacterGames")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("TournamentWinner.Api.Models.Community", b =>
                 {
                     b.HasOne("TournamentWinner.Api.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerUserId");
 
                     b.Navigation("Owner");
                 });
@@ -784,13 +671,13 @@ namespace twapi.Migrations
             modelBuilder.Entity("TournamentWinner.Api.Models.CommunityGame", b =>
                 {
                     b.HasOne("TournamentWinner.Api.Models.Community", "Community")
-                        .WithMany("Games")
+                        .WithMany("CommunityGames")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("CommunityGames")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -890,21 +777,58 @@ namespace twapi.Migrations
                         .WithMany("Players")
                         .HasForeignKey("CommunityId");
 
+                    b.HasOne("TournamentWinner.Api.Models.ProfileGame", "ProfileGame")
+                        .WithMany()
+                        .HasForeignKey("ProfileGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProfileGame");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.Profile", b =>
+                {
+                    b.HasOne("TournamentWinner.Api.Models.User", "User")
+                        .WithOne("Profile")
+                        .HasForeignKey("TournamentWinner.Api.Models.Profile", "UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.ProfileGame", b =>
+                {
                     b.HasOne("TournamentWinner.Api.Models.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TournamentWinner.Api.Models.UserGame", "User")
-                        .WithMany()
-                        .HasForeignKey("UserGameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TournamentWinner.Api.Models.Profile", "Profile")
+                        .WithMany("Games")
+                        .HasForeignKey("ProfileId");
 
                     b.Navigation("Game");
 
-                    b.Navigation("User");
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.ProfileGameCharacter", b =>
+                {
+                    b.HasOne("TournamentWinner.Api.Models.Character", "Character")
+                        .WithMany()
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TournamentWinner.Api.Models.ProfileGame", "UserGame")
+                        .WithMany("Characters")
+                        .HasForeignKey("ProfileGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+
+                    b.Navigation("UserGame");
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Rank", b =>
@@ -933,42 +857,15 @@ namespace twapi.Migrations
                     b.Navigation("CommunityGame");
                 });
 
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>
+            modelBuilder.Entity("TournamentWinner.Api.Models.UserAuthMethod", b =>
                 {
-                    b.HasOne("TournamentWinner.Api.Models.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TournamentWinner.Api.Models.User", "User")
-                        .WithMany("Games")
+                        .WithMany("UserAuthMethods")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Game");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserGameCharacter", b =>
-                {
-                    b.HasOne("TournamentWinner.Api.Models.Character", "Character")
-                        .WithMany()
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TournamentWinner.Api.Models.UserGame", "UserGame")
-                        .WithMany("Characters")
-                        .HasForeignKey("UserGameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Character");
-
-                    b.Navigation("UserGame");
                 });
 
             modelBuilder.Entity("TournamentWinner.Api.Models.Bracket", b =>
@@ -976,9 +873,16 @@ namespace twapi.Migrations
                     b.Navigation("Sets");
                 });
 
+            modelBuilder.Entity("TournamentWinner.Api.Models.Character", b =>
+                {
+                    b.Navigation("AlternateNames");
+
+                    b.Navigation("CharacterGames");
+                });
+
             modelBuilder.Entity("TournamentWinner.Api.Models.Community", b =>
                 {
-                    b.Navigation("Games");
+                    b.Navigation("CommunityGames");
 
                     b.Navigation("Players");
 
@@ -999,6 +903,23 @@ namespace twapi.Migrations
                     b.Navigation("Roles");
                 });
 
+            modelBuilder.Entity("TournamentWinner.Api.Models.Game", b =>
+                {
+                    b.Navigation("CharacterGames");
+
+                    b.Navigation("CommunityGames");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.Profile", b =>
+                {
+                    b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("TournamentWinner.Api.Models.ProfileGame", b =>
+                {
+                    b.Navigation("Characters");
+                });
+
             modelBuilder.Entity("TournamentWinner.Api.Models.Ranking", b =>
                 {
                     b.Navigation("Ranks");
@@ -1006,12 +927,9 @@ namespace twapi.Migrations
 
             modelBuilder.Entity("TournamentWinner.Api.Models.User", b =>
                 {
-                    b.Navigation("Games");
-                });
+                    b.Navigation("Profile");
 
-            modelBuilder.Entity("TournamentWinner.Api.Models.UserGame", b =>
-                {
-                    b.Navigation("Characters");
+                    b.Navigation("UserAuthMethods");
                 });
 #pragma warning restore 612, 618
         }

@@ -29,7 +29,7 @@ public class UserController {
     public ActionResult<User?> SignIn(SignInViewModel signInViewModel) {
         var user = _context.Users.FirstOrDefault(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == signInViewModel.AuthProviderId && uam.AuthValue == signInViewModel.AuthValue));
         if(user == null)
-            return null;
+            return new NotFoundResult();
         
         return new User(){
             Email = user.Email,

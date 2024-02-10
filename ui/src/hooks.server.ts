@@ -32,7 +32,9 @@ export const handle: Handle = sequence(
             },
             async jwt(params){
                 let user: User | null = null;
-                console.log(params);
+                if(!params.account && params.token){
+                    return params.token;
+                }
                 user = await getUser(params.account?.provider ?? "", params.account?.providerAccountId ?? "");
                 if(user == null){
                     params.token.isNewUser = true;

@@ -17,7 +17,7 @@
     let stateRegionProvince = 'id';
     let customSlug = false;
     function handleSubmit(){
-
+        
     }
     function generateSlug(){
         if(customSlug){
