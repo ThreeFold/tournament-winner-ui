@@ -1,9 +1,8 @@
 <script lang="ts">
-import type Community from '$lib/models/repo/community';
-import type { PageData } from './$types';
+	import type Community from '$lib/models/repo/community';
+	import type { PageData } from './$types';
 
-export let data: PageData;
+	export let data: PageData;
 </script>
+
 <p>{data.community?.description}</p>
-<style lang="scss" scoped>
-</style>

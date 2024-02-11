@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
 using TournamentWinner.Api.Models;
 
@@ -27,13 +28,17 @@ public class UserController {
     
     [HttpPost("signin")]
     public ActionResult<User?> SignIn(SignInViewModel signInViewModel) {
-        var user = _context.Users.FirstOrDefault(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == signInViewModel.AuthProviderId && uam.AuthValue == signInViewModel.AuthValue));
+        var user = _context.Users
+            .Include(u => u.Profile)
+            .FirstOrDefault(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == signInViewModel.AuthProviderId && uam.AuthValue == signInViewModel.AuthValue)); 
         if(user == null)
             return new NotFoundResult();
         
         return new User(){
+            UserId = user.UserId,
             Email = user.Email,
             UserCreationDate = user.UserCreationDate,
+            InsertDate = user.InsertDate,
             Profile = new Profile {
                 Handle = user.Profile?.Handle,
                 

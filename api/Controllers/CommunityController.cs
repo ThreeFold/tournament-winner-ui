@@ -135,9 +135,10 @@ public class CommunityController : ControllerBase {
 
     [HttpPost]
     public async Task<Community> CreateCommunity(Community community){
-        var newCommunity = await this._context.Communities.AddAsync(community);
+        Console.Out.WriteLine($"Incoming Request {community}");
+        await this._context.Communities.AddAsync(community);
         await this._context.SaveChangesAsync();
-        return newCommunity.Entity;
+        return community;
     }
 
     [HttpPatch]
