@@ -2,52 +2,52 @@ import type Game from './repo/Game';
 import type Community from './repo/Community';
 
 export default interface Player {
-	playerId: string;
-	prefix?: string;
+    id: string;
+    prefix?: string;
     userId?: string;
     user?: User;
-	name: string;
-	playerCreationDate: Date;
-	previousNames: Array<string>;
+    name: string;
+    playerCreationDate: Date;
+    previousNames: Array<string>;
 }
 
 export interface User {
-	userId: string;
-	email: string;
+    id: string;
+    email: string;
     userCreationDate: Date;
     insertDate: Date;
-	profile?: Profile;
+    profile?: Profile;
 }
 
 export interface Profile {
-    profileId: string;
+    id: string;
     prefix: string;
     handle: string;
-	firstName: string;
+    firstName: string;
     lastName: string;
-	profileImage: string;
+    profileImage: string;
     user?: User;
     insertDate: Date;
 }
 export interface ExternalLinks {
-	icon: string;
-	text: string;
-	url: string;
+    icon: string;
+    text: string;
+    url: string;
 }
 export interface ContactMethod {
-	type: string; //eg Phone Number, Discord, etc.
-	value: string;
+    type: string; //eg Phone Number, Discord, etc.
+    value: string;
 }
 export interface UserAuthMethod {
-	userAuthMethodId: number;
-	userId: string;
-	authValue: string;
-	authProviderId: string;
+    id: number;
+    userId: string;
+    authValue: string;
+    authProviderId: string;
 }
 export interface CommunityGame {
-	communityGameId: number;
-	community: Community;
-	owner: User;
-	game: Game;
-	insertDate: Date;
+    id: number;
+    community: Community;
+    owner: User;
+    game: Game;
+    insertDate: Date;
 }

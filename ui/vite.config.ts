@@ -3,13 +3,8 @@ import type { UserConfig } from 'vite';
 import fs from 'fs';
 
 const config: UserConfig = {
-	server: {
-		https: {
-			key: fs.readFileSync(`${__dirname}/cert/key.pem`),
-			cert: fs.readFileSync(`${__dirname}/cert/cert.pem`)
-		}
-	},
-	plugins: [sveltekit()]
+    server: {},
+    plugins: [sveltekit()]
 };
 
 export default config;

@@ -1,7 +1,7 @@
 namespace TournamentWinner.Api.Models;
 
 public class CharacterGame {
-    public int CharacterGameId {get;set;}
+    public int Id {get;set;}
     public int CharacterId {get;set;}
     public int GameId {get;set;}    
     public string? UniqueIdentifier {get;set;}

@@ -1,7 +1,7 @@
 namespace TournamentWinner.Api.Models;
 
 public class CommunityGame {
-    public int CommunityGameId {get;set;}
+    public int Id {get;set;}
     public int CommunityId {get;set;}
     public int GameId {get;set;}
     public Community Community {get;set;}

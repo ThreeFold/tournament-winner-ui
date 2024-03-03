@@ -12,8 +12,8 @@ using TournamentWinner.Api.Data;
 namespace twapi.Migrations
 {
     [DbContext(typeof(CommunityContext))]
-    [Migration("20240210003722_UniqueEmailUser")]
-    partial class UniqueEmailUser
+    [Migration("20240224185629_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -428,7 +428,6 @@ namespace twapi.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ProfileImage")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")

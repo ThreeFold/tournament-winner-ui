@@ -19,14 +19,22 @@ namespace TournamentWinner.Api.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Community>().ToTable("communities")
-            .Property(u => u.InsertDate)
-            .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<CommunityUser>().ToTable("communityUsers")
-            .Property(u => u.InsertDate)
-            .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<CommunityUserRole>().ToTable("communityUserRoles")
-            .Property(u => u.InsertDate)
-            .HasDefaultValueSql("NOW()");
+                .Property(u => u.InsertDate)
+                .HasDefaultValueSql("NOW()");
+            modelBuilder.Entity<Community>().HasMany(e => e.Players)
+                .WithMany(e => e.Communities);
+            modelBuilder.Entity<CommunityUser>()
+                .ToTable("communityUsers")
+                .Property(u => u.InsertDate)
+                .HasDefaultValueSql("NOW()");
+            modelBuilder.Entity<CommunityUser>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Communities)
+                .HasForeignKey(e => e.UserId);
+            modelBuilder.Entity<CommunityUser>().HasOne(e => e.Community)
+                .WithMany(e => e.Users)
+                .HasForeignKey(e => e.CommunityId);
+                
             modelBuilder.Entity<User>().ToTable("users")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
@@ -34,16 +42,16 @@ namespace TournamentWinner.Api.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
             modelBuilder.Entity<User>().ToTable("users")
-            .Property(u => u.UserId)
+            .Property(u => u.Id)
             .HasDefaultValueSql("gen_random_uuid()");
             modelBuilder.Entity<UserAuthMethod>().ToTable("userAuthMethods")
-            .Property(u => u.UserAuthMethodId)
+            .Property(u => u.Id)
             .HasDefaultValueSql("gen_random_uuid()");
             modelBuilder.Entity<Profile>().ToTable("profiles")
             .Property(p => p.InsertDate)
             .HasDefaultValueSql("NOW()");
             modelBuilder.Entity<Profile>().ToTable("profiles")
-            .Property(p => p.ProfileId)
+            .Property(p => p.Id)
             .HasDefaultValueSql("gen_random_uuid()");
             modelBuilder.Entity<ProfileGame>().ToTable("userGames")
             .Property(u => u.InsertDate)

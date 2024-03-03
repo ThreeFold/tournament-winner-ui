@@ -1,6 +1,6 @@
 export const load = async () => {
-	return {
-		game: {},
-		players: []
-	};
+    return {
+        game: {},
+        players: []
+    };
 };

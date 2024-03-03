@@ -56,6 +56,9 @@ public class UserController {
                     AuthProviderId = userToCreate.AuthProviderId,
                     AuthValue = userToCreate.AuthValue
                 }
+            },
+            Profile = new Profile(){
+                Handle = userToCreate.Username,
             }
         };
 

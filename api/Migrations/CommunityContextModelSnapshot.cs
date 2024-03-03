@@ -425,7 +425,6 @@ namespace twapi.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ProfileImage")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")

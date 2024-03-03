@@ -139,7 +139,7 @@ namespace twapi.Migrations
                     Handle = table.Column<string>(type: "text", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    ProfileImage = table.Column<string>(type: "text", nullable: false),
+                    ProfileImage = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     InsertDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
@@ -622,6 +622,12 @@ namespace twapi.Migrations
                 name: "IX_userGames_ProfileId",
                 table: "userGames",
                 column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_Email",
+                table: "users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -1,7 +1,7 @@
 namespace TournamentWinner.Api.Models;
 
 public class Ranking {
-    public int RankingId {get;set;}
+    public int Id {get;set;}
     public string Name {get;set;}
     public int CommunityGameId {get;set;}
     public DateTime PeriodStart {get;set;}
