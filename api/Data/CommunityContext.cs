@@ -21,8 +21,8 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<Community>().ToTable("communities")
                 .Property(u => u.InsertDate)
                 .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<Community>().HasMany(e => e.Players)
-                .WithMany(e => e.Communities);
+            modelBuilder.Entity<Community>().HasMany(e => e.CommunityGames)
+                .WithOne(e => e.Community);
             modelBuilder.Entity<CommunityUser>()
                 .ToTable("communityUsers")
                 .Property(u => u.InsertDate)

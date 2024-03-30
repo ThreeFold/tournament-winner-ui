@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
@@ -8,6 +7,15 @@ using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Controllers;
 
+public class CreateCommunityRequestDto {
+    public string Name {get;set;}
+    public string? Slug {get;set;}
+    public string Description {get;set;}
+    public string Country {get;set;}
+    public string RegionState {get;set;}
+    public string? City {get;set;}
+    public string OwnerId { get; set; }
+}
 [ApiController]
 [Route("api/[controller]")]
 public class CommunityController : ControllerBase {
@@ -26,7 +34,7 @@ public class CommunityController : ControllerBase {
     public IEnumerable<Community>? GetCommunities(int p = 1, int r = 20){
         var toSkip = (p - 1) * r;
         return this._context.Communities
-        .Include(c => c.Owner)
+        .Include(c => c.Users.Where(u => u.Role == CommunityRoleType.Owner))
         .Take(r)
         .Skip(toSkip)
         .OrderByDescending(c => c.InsertDate);
@@ -37,7 +45,7 @@ public class CommunityController : ControllerBase {
         IQueryable<CommunityGame> query;
         if(int.TryParse(communityId, out var communityActualId)){
             query = this._context.CommunityGames
-                .Where(c => c.Community.CommunityId == communityActualId);
+                .Where(c => c.Community.Id == communityActualId);
         }
         else {
             query = this._context.CommunityGames
@@ -49,19 +57,16 @@ public class CommunityController : ControllerBase {
                 GameId = cg.GameId,
                 Community = new Community{
                     Description = cg.Community.Description,
-                    CommunityId = cg.Community.CommunityId,
+                    Id = cg.Community.Id,
                     Name = cg.Community.Name,
-                    Owner = new User {
-                        UserId = cg.Community.Owner.UserId,
-                    },
                     Slug = cg.Community.Slug,
                     InsertDate = cg.Community.InsertDate,
                 },
-                CommunityGameId = cg.CommunityGameId,
+                Id = cg.Id,
                 Game = new Game{
                     BannerImage = cg.Game.BannerImage,
                     Description = cg.Game.Description,
-                    GameId = cg.Game.GameId,
+                    Id = cg.Game.Id,
                     IconImage = cg.Game.IconImage,
                     Name = cg.Game.Name,
                     InsertDate = cg.Game.InsertDate,
@@ -87,20 +92,20 @@ public class CommunityController : ControllerBase {
             return NotFound("Community not found");
         }
 
-        var communityGame = await this._context.CommunityGames.FirstOrDefaultAsync(cg => cg.CommunityId == community.CommunityId && cg.GameId == game.GameId);
+        var communityGame = await this._context.CommunityGames.FirstOrDefaultAsync(cg => cg.CommunityId == community.Id && cg.GameId == game.Id);
 
         if(communityGame == null){
             return NotFound("Community does not play this game");
         }
         return Ok(new CommunityGame(){
-            GameId = game.GameId,
+            GameId = game.Id,
             Game = new Game()
         });
     }
 
     private async Task<Community?> GetCommunity(string communityId){
         if(int.TryParse(communityId, out var communityActualId)){
-            return await this._context.Communities.FirstOrDefaultAsync(c => c.CommunityId == communityActualId);
+            return await this._context.Communities.FirstOrDefaultAsync(c => c.Id == communityActualId);
         }
         return await this._context.Communities.FirstOrDefaultAsync(c => c.Slug == communityId);
 
@@ -108,7 +113,7 @@ public class CommunityController : ControllerBase {
 
     private async Task<Game?> GetGame(string gameId){
         if(int.TryParse(gameId, out var gameActualId)){
-            return await this._context.Games.FirstOrDefaultAsync(g => g.GameId == gameActualId);
+            return await this._context.Games.FirstOrDefaultAsync(g => g.Id == gameActualId);
         }
         return await this._context.Games.FirstOrDefaultAsync(g => g.Slug == gameId);
     }
@@ -117,7 +122,7 @@ public class CommunityController : ControllerBase {
     public Task<Community?> Get(string communityId){
         //communityId can be the slug or actual id, resolve to one
         if(int.TryParse(communityId, out var communityActualId)){
-            return this._context.Communities.FirstOrDefaultAsync(c => c.CommunityId == communityActualId);
+            return this._context.Communities.FirstOrDefaultAsync(c => c.Id == communityActualId);
         }
         
         return this._context.Communities.FirstOrDefaultAsync(c => c.Slug == communityId);
@@ -126,17 +131,40 @@ public class CommunityController : ControllerBase {
     [HttpGet("{communityId}/players")]
     public IEnumerable<Player> GetPlayers(string communityId){
         //communityId can be the slag or actual id, resolve to one
-        if(int.TryParse(communityId, out var communityActualId)){
-            return this._context.Communities.FirstOrDefault(c => c.CommunityId == communityActualId)?.Players ?? new List<Player>();
+        if(int.TryParse(communityId, out var communityActualId))
+        {
+            return this._context.Communities
+                .FirstOrDefault(c => c.Id == communityActualId)?.CommunityGames.SelectMany(cg => cg.CommunityGamePlayers.Select(cgp => cgp.Player))
+                ?? new List<Player>();
         }
         
-        return this._context.Communities.FirstOrDefault(c => c.Slug == communityId)?.Players ?? new List<Player>();
+        return this._context.Communities
+            .FirstOrDefault(c => c.Slug == communityId)?.CommunityGames.SelectMany(cg => cg.CommunityGamePlayers.Select(cgp => cgp.Player))
+            ?? new List<Player>();
+
     }
 
     [HttpPost]
-    public async Task<Community> CreateCommunity(Community community){
-        Console.Out.WriteLine($"Incoming Request {community}");
-        await this._context.Communities.AddAsync(community);
+    public async Task<Community?> CreateCommunity(CreateCommunityRequestDto dto){
+        if(!this.ModelState.IsValid){
+            this.HttpContext.Response.StatusCode = 422;
+            return null;
+        }
+        var community = new Community(){
+            City = dto.City,
+            Name = dto.Name,
+            Slug = dto.Slug,
+            Users = new List<CommunityUser>(){
+                new CommunityUser(){
+                    Role = CommunityRoleType.Owner,
+                    UserId = dto.OwnerId,
+                }
+            },
+            Country = dto.Country,
+            Description = dto.Description,
+            RegionState = dto.RegionState,
+        };
+        await this._context.AddAsync(community);
         await this._context.SaveChangesAsync();
         return community;
     }

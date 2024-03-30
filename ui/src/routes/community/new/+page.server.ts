@@ -1,5 +1,4 @@
-import { goto } from '$app/navigation';
-import type Community from '$lib/models/repo/Community';
+import type CreateCommunityRequest from '$lib/models/api/Community';
 import { createCommunity } from '$lib/server/CommunityRepo';
 import { redirect, type Actions } from '@sveltejs/kit';
 
@@ -19,10 +18,7 @@ export const actions: Actions = {
         const city = data.get('city') as string;
         const links = data.getAll('link') as Array<string>;
 
-        const newCommunity: Community = {
-            id: 0,
-            ownerUserId: session.user.id,
-            insertDate: new Date(),
+        const newCommunity: CreateCommunityRequest = {
             name,
             slug,
             description,

@@ -35,7 +35,7 @@ public class UserController {
             return new NotFoundResult();
         
         return new User(){
-            UserId = user.UserId,
+            Id = user.Id,
             Email = user.Email,
             UserCreationDate = user.UserCreationDate,
             InsertDate = user.InsertDate,

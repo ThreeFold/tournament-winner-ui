@@ -1,15 +1,17 @@
 import { PUBLIC_APP_API_BASE } from '$env/static/public';
 import type { CommunityGame } from '$lib/models/player';
+import type CreateCommunityRequest from '$lib/models/api/Community';
 import type Community from '$lib/models/repo/Community';
 
-export async function createCommunity(newCommunity: Community): Promise<Community> {
+export async function createCommunity(newCommunity: CreateCommunityRequest): Promise<Community> {
     const url = new URL(`community`, PUBLIC_APP_API_BASE);
     console.log(url);
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(newCommunity),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer {authToken}`,
         }
     });
     console.log(response);

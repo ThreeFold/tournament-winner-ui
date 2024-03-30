@@ -9,5 +9,6 @@ public class CommunityGame {
     public ICollection<Ranking> Rankings {get;set;}
     public ICollection<League> Leagues {get;set;}
     public ICollection<Bracket> Brackets {get;set;}
+    public ICollection<CommunityGamePlayer> CommunityGamePlayers { get; set; }
     public DateTime InsertDate {get;set;}
 }

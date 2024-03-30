@@ -8,7 +8,6 @@ public class Community {
     public string RegionState {get;set;}
     public string? City {get;set;}
     public ICollection<CommunityGame> CommunityGames {get;set;}
-    public ICollection<Player> Players {get;set;}
     public ICollection<CommunityUser> Users {get;set;}
     public DateTime InsertDate {get;set;}
 }

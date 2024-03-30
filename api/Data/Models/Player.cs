@@ -14,7 +14,6 @@ public class CommunityGamePlayer {
     public int PlayerId {get;set;}
     public int CommunityGameId {get;set;}
 
-
     public CommunityGame CommunityGame {get;set;}
     public Player Player {get;set;}
 
