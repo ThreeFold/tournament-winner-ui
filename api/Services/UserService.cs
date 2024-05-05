@@ -5,27 +5,36 @@ using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Services;
 
-public interface IUserService {
+public interface IUserService
+{
     public Task<UserDto?> RegisterUser(UserRegisterDto userToRegister);
     public Task<UserDto?> GetUser(string authProviderId, string authValue);
 }
-public class UserService: IUserService{
+public class UserService : IUserService
+{
 
     private CommunityContext context;
-    public UserService(CommunityContext context){
+    public UserService(CommunityContext context)
+    {
         this.context = context;
     }
-    public async Task<UserDto?> RegisterUser(UserRegisterDto userToRegister){
+    public async Task<UserDto?> RegisterUser(UserRegisterDto userToRegister)
+    {
         var existingUser = await context.Users.Include(u => u.UserAuthMethods)
             .Include(u => u.Profile)
             .SingleOrDefaultAsync(u => u.Email == userToRegister.Email);
-        if(existingUser != null){
+
+        if (existingUser != null)
+        {
             var existingAuthMethod = existingUser.UserAuthMethods.SingleOrDefault(uam => uam.AuthProviderId == userToRegister.AuthProviderId);
-            if(existingAuthMethod?.AuthValue != userToRegister.AuthProviderValue){
+            if (existingAuthMethod?.AuthValue != userToRegister.AuthProviderValue)
+            {
+                throw new ArgumentException("Could not find User for provided auth value");
             }
         }
 
-        var user = new User(){
+        var user = new User()
+        {
             Email = userToRegister.Email,
             UserCreationDate = DateTime.UtcNow,
             UserAuthMethods = new List<UserAuthMethod>(){
@@ -34,7 +43,8 @@ public class UserService: IUserService{
                     AuthValue = userToRegister.AuthProviderValue
                 }
             },
-            Profile = new Profile(){
+            Profile = new Profile()
+            {
                 Handle = userToRegister.Username,
             }
         };
@@ -45,18 +55,43 @@ public class UserService: IUserService{
         return userDto;
     }
 
-    public async Task<UserDto?> GetUser(string authProviderId, string authValue){
+    public async Task<UserDto?> GetUser(string authProviderId, string authValue)
+    {
         var user = await context.Users
             .Include(u => u.Profile)
-            .FirstOrDefaultAsync(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == authProviderId && uam.AuthValue == authValue)); 
+            .FirstOrDefaultAsync(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == authProviderId && uam.AuthValue == authValue));
 
         return GetUserDto(user);
     }
-    private UserDto? GetUserDto(User? user){
-        if(user == null)
+    private UserDto? GetUserDto(User? user)
+    {
+        if (user == null)
             return null;
 
-        return new UserDto();
+        return new UserDto
+        {
+            Email = user.Email,
+            Id = user.Id,
+            UserCreationDate = user.UserCreationDate,
+            Profile = this.GetProfileDto(user.Profile),
+        };
+    }
+
+    private ProfileDto? GetProfileDto(Profile? profile)
+    {
+        if (profile == null)
+            return null;
+
+        return new ProfileDto
+        {
+            Handle = profile?.Handle,
+            Prefix = profile?.Prefix,
+            FirstName = profile?.FirstName,
+            LastName = profile?.LastName,
+            Bio = profile?.Bio,
+            ProfileImage = profile?.ProfileImage,
+            UserId = profile?.UserId,
+        };
     }
 }
 

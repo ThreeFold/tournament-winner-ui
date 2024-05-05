@@ -7,34 +7,39 @@ namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController {
-    
+public class UserController
+{
+
     private IUserService _userService;
 
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService)
+    {
         this._userService = userService;
     }
-    
+
     [HttpPost("signin")]
-    public async Task<ActionResult<UserViewModel?>> SignIn(SignInViewModel signInViewModel) {
+    public async Task<ActionResult<UserDto>> SignIn(SignInViewModel signInViewModel)
+    {
         var dto = await this._userService.GetUser(signInViewModel.AuthProviderId, signInViewModel.AuthValue);
-        if(dto == null)
+        if (dto == null)
             return new NotFoundResult();
-        return this.GetUserViewModel(dto);
+        return dto;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<UserViewModel?>> CreateAccount(UserCreateViewModel userToCreate){
-        var dto = new UserRegisterDto();
+    public async Task<ActionResult<UserDto>> CreateAccount(UserCreateViewModel userToCreate)
+    {
+        var dto = new UserRegisterDto
+        {
+            Username = userToCreate.Username,
+            Email = userToCreate.Email,
+            AuthProviderId = userToCreate.AuthProviderId,
+            AuthProviderValue = userToCreate.AuthValue,
+        };
         var registeredUser = await this._userService.RegisterUser(dto);
-        if(registeredUser == null)
+        if (registeredUser == null)
             return new BadRequestResult();
 
-        return this.GetUserViewModel(registeredUser);
-    }
-
-    private UserViewModel GetUserViewModel(UserDto dto)
-    {
-        throw new NotImplementedException();
+        return registeredUser;
     }
 }

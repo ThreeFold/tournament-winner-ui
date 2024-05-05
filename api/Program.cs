@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<CommunityContext>(options => 
+builder.Services.AddDbContext<CommunityContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
 builder.Services.AddAuthentication(options =>
         {
@@ -24,7 +24,7 @@ builder.Services.AddAuthentication(options =>
         });
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddControllers()
-    .AddJsonOptions(options => 
+    .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });

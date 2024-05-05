@@ -6,6 +6,7 @@ using TournamentWinner.Api.Models;
 namespace TournamentWinner.Api.Controllers;
 
 [ApiController]
-public class AccountController {
-    
+public class AccountController
+{
+
 }

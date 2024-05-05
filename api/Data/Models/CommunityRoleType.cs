@@ -1,6 +1,7 @@
 namespace TournamentWinner.Api.Models;
 
-public enum CommunityRoleType {
+public enum CommunityRoleType
+{
     Owner = 1,
     Administrator = 2,
     Moderator = 3,

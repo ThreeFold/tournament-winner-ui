@@ -9,12 +9,12 @@ namespace TournamentWinner.Api.Data
         : base(options)
         {
         }
-        public DbSet<Community> Communities {get;set;}
-        public DbSet<CommunityGame> CommunityGames {get;set;}
-        public DbSet<Player> Players {get;set;}
-        public DbSet<Game> Games {get;set;}
-        public DbSet<CommunityUser> CommunityUsers {get;set;}
-        public DbSet<User> Users {get;set;}
+        public DbSet<Community> Communities { get; set; }
+        public DbSet<CommunityGame> CommunityGames { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<CommunityUser> CommunityUsers { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,7 +34,7 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<CommunityUser>().HasOne(e => e.Community)
                 .WithMany(e => e.Users)
                 .HasForeignKey(e => e.CommunityId);
-                
+
             modelBuilder.Entity<User>().ToTable("users")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
@@ -80,7 +80,8 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<Game>().ToTable("games")
             .Property(u => u.InsertDate)
             .HasDefaultValueSql("NOW()");
-            modelBuilder.Entity<Character>(entity => {
+            modelBuilder.Entity<Character>(entity =>
+            {
                 entity.ToTable("character");
                 entity.Property(u => u.InsertDate).HasDefaultValueSql("NOW()");
                 entity.HasIndex(u => u.Name).IsUnique();
