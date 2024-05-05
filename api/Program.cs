@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
+using TournamentWinner.Api.Services;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -21,6 +22,7 @@ builder.Services.AddAuthentication(options =>
             options.Authority = "https://dev-80ja08wntnvjbfkt.us.auth0.com/";
             options.Audience = "https://api.combo-king.com/";
         });
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddControllers()
     .AddJsonOptions(options => 
     {

@@ -3,30 +3,30 @@
 @tailwind utilities;
 
 :root {
-    --base-font-family: arial;
-    --tw-light-gray: #cfcfcf;
-    --tw-dark-gray: #494949;
-    --tw-primary: #084994;
-    --tw-primary-font-top: white;
+	--base-font-family: arial;
+	--tw-light-gray: #cfcfcf;
+	--tw-dark-gray: #494949;
+	--tw-primary: #084994;
+	--tw-primary-font-top: white;
 
-    /* General Spacing Variables */
-    --size1: 0.125rem;
-    --size2: 0.25rem;
-    --size3: 0.5rem;
-    --size4: 1rem;
-    --size5: 2rem;
-    --size6: 4rem;
+	/* General Spacing Variables */
+	--size1: 0.125rem;
+	--size2: 0.25rem;
+	--size3: 0.5rem;
+	--size4: 1rem;
+	--size5: 2rem;
+	--size6: 4rem;
 
-    /* Font Sizes */
-    --font-size-small: 6pt;
-    --font-size-large: 24pt;
-    --font-size-medium: 11pt;
+	/* Font Sizes */
+	--font-size-small: 6pt;
+	--font-size-large: 24pt;
+	--font-size-medium: 11pt;
 
-    /* Page Size Breakpoints */
-    --large-breakpoint: 56rem;
-    --small-breakpoint: 20rem;
+	/* Page Size Breakpoints */
+	--large-breakpoint: 56rem;
+	--small-breakpoint: 20rem;
 }
 
 .bg-primary {
-    background-color: theme(colors.primary);
+	background-color: theme(colors.primary);
 }

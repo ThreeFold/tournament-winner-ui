@@ -23,12 +23,3 @@ services:
       ADMINER_DEFAULT_DB_NAME: tournamentwinner
     ports:
       - 8080:8080
-  twapi:
-    image: twapi
-    build: ./api
-    ports:
-      - 5109:5109
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ~/.vsdbg:/remote_debugger:rw

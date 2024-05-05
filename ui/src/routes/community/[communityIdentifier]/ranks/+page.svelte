@@ -2,8 +2,8 @@
 </script>
 
 <div>
-    <div>
-        <a href="#">Current Season</a>
-        <a href="#">Archive</a>
-    </div>
+	<div>
+		<a href="_">Current Season</a>
+		<a href="_">Archive</a>
+	</div>
 </div>
