@@ -1,4 +1,4 @@
 export default interface Link {
-	site: string;
-	domain: URL;
+    site: string;
+    domain: URL;
 }

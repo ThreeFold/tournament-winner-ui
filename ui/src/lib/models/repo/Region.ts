@@ -1,4 +1,4 @@
 export default interface Region {
-	name: string;
-	slug: string;
+    name: string;
+    slug: string;
 }
