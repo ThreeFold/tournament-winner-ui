@@ -1,6 +1,7 @@
 import type CreateCommunityRequest from '$lib/models/api/Community';
-import { createCommunity } from '$lib/server/CommunityRepo';
 import { redirect, type Actions } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
+import type Community from '$lib/models/repo/Community';
 
 export const actions: Actions = {
     default: async (event) => {
@@ -27,7 +28,16 @@ export const actions: Actions = {
             city,
             links
         };
-        const createdCommunity = await createCommunity(newCommunity);
+    const url = new URL(`community`, env.PUBLIC_APP_API_BASE);
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(newCommunity),
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.accessToken ?? ''}`,
+        }
+    });
+        const createdCommunity = (await response.json()) as Community;
         redirect(307, `/community/${createdCommunity.slug}`);
     }
 };

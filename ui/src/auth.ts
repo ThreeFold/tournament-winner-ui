@@ -36,13 +36,12 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                 }
                 params.token.id = user?.id;
                 params.token.name = user?.profile?.handle;
+                params.token.accessToken = params.account.access_token;
                 return params.token;
             },
-            //user is only provided if using db auth
-            //token is provided when using jwt auth
-            //since we are using an external auth provider, rely on the token
             async session(params: any) {
                 params.session.user.id = params.token.id;
+                params.session.user.accessToken = params.accessToken;
                 return params.session;
             }
         }

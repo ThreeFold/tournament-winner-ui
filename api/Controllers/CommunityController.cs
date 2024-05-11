@@ -1,5 +1,3 @@
-using System.Net;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
@@ -34,7 +32,7 @@ public class CommunityController : ControllerBase
         return "success";
     }
 
-    [HttpGet("list")]
+    [HttpGet("[controller]")]
     public IEnumerable<Community>? GetCommunities(int p = 1, int r = 20)
     {
         var toSkip = (p - 1) * r;

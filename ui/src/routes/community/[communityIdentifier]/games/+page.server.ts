@@ -1,10 +1,12 @@
+import { env } from '$env/dynamic/public';
 import type { CommunityGame } from '$lib/models/player';
-import { getCommunityGames } from '$lib/server/CommunityRepo';
+import { get } from '$lib/server/API';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
-    const communityGames = await getCommunityGames(params.communityIdentifier);
+    const fetchUrl = new URL(`/community/${params.communityIdentifier}/games`, env.PUBLIC_APP_API_BASE);
+    const games = await get<Array<CommunityGame>>(fetchUrl);
     return {
-        communityGames: communityGames ?? new Array<CommunityGame>()
+        communityGames: games
     };
 }) satisfies PageServerLoad;
