@@ -34,14 +34,12 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                     user = await registerUser(userToCreate);
                     console.info(user);
                 }
-                params.token.id = user?.id;
-                params.token.name = user?.profile?.handle;
-                params.token.accessToken = params.account.access_token;
+                params.token.name = params.token.name ?? user?.profile?.handle;
+                params.token.id = params.token.id ?? user?.id;
                 return params.token;
             },
             async session(params: any) {
-                params.session.user.id = params.token.id;
-                params.session.user.accessToken = params.accessToken;
+                params.session.name = params.token.name;
                 return params.session;
             }
         }

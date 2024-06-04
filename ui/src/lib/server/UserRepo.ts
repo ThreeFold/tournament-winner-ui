@@ -1,4 +1,4 @@
-import { PUBLIC_APP_API_BASE } from '$env/static/public';
+import { env } from '$env/dynamic/private';
 import type { User } from '$lib/models/player';
 
 export class UserCreateViewModel {
@@ -17,7 +17,7 @@ export class UserCreateViewModel {
 export async function registerUser(userToCreate: UserCreateViewModel): Promise<User | null> {
     try {
         console.log(userToCreate);
-        const url = new URL('user/register', PUBLIC_APP_API_BASE);
+        const url = new URL('user/register', env.APP_API_BASE);
         console.log(url);
         const response = await fetch(url, {
             body: JSON.stringify(userToCreate),
@@ -40,7 +40,7 @@ export async function getUser(authProviderId: string, authValue: string): Promis
         authValue
     });
     try {
-        const url = new URL('user/signin', PUBLIC_APP_API_BASE);
+        const url = new URL('user/signin', env.APP_API_BASE);
         const response = await fetch(url, {
             body: signInDetails,
             method: 'POST',

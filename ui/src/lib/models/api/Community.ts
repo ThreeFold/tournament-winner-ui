@@ -5,5 +5,6 @@ export default interface CreateCommunityRequest {
     country: string;
     regionState: string;
     city?: string;
+    ownerId: string;
     links?: Array<string>;
 }

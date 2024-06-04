@@ -1,12 +1,13 @@
 <script lang="ts">
-    import type { PageData } from './$types';
-    export let data: PageData;
+    import { page } from "$app/stores";
+    console.log($page.data.communityGames);
+
 </script>
 
 <div>
-    {#if data}
+    {#if $page.data}
         <div class="game-list">
-            {#each data.communityGames as communityGame}
+            {#each $page.data.communityGames as communityGame}
                 <div class="game-card">
                     <div class="banner">
                         <img
@@ -16,7 +17,7 @@
                     </div>
                     <div class="body">
                         <a
-                            href="{data.communityHref}/games/{communityGame.game.slug ??
+                            href="{$page.data.communityHref}/games/{communityGame.game.slug ??
                                 communityGame.game.id}"
                         >
                             <div class="game-title">

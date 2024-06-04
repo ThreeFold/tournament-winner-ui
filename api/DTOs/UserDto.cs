@@ -9,6 +9,21 @@ public class UserDto
     public ProfileDto? Profile { get; set; }
     public DateTime UserCreationDate { get; set; }
     public IEnumerable<(CommunityDto, PlayerDto)> Communities { get; set; } = new List<(CommunityDto Community, PlayerDto Player)>();
+
+    public static UserDto? GetUserDto(User? user)
+    {
+        if (user == null)
+            return null;
+
+        return new UserDto
+        {
+            Email = user.Email,
+            Id = user.Id,
+            UserCreationDate = user.UserCreationDate,
+            Profile = ProfileDto.GetProfileDto(user.Profile),
+        };
+    }
+
 }
 
 public class ProfileDto
@@ -21,6 +36,23 @@ public class ProfileDto
     public string? ProfileImage { get; set; }
     public string? UserId { get; set; }
     public DateTime InsertDate { get; set; }
+
+    public static ProfileDto? GetProfileDto(Profile? profile)
+    {
+        if (profile == null)
+            return null;
+
+        return new ProfileDto
+        {
+            Handle = profile?.Handle,
+            Prefix = profile?.Prefix,
+            FirstName = profile?.FirstName,
+            LastName = profile?.LastName,
+            Bio = profile?.Bio,
+            ProfileImage = profile?.ProfileImage,
+            UserId = profile?.UserId,
+        };
+    }
 }
 
 public class PlayerDto

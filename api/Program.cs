@@ -23,6 +23,7 @@ builder.Services.AddAuthentication(options =>
             options.Audience = "https://api.combo-king.com/";
         });
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICommunityService, CommunityService>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

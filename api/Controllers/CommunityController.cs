@@ -1,6 +1,8 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TournamentWinner.Api.Data;
+using TournamentWinner.Api.DTOs;
 using TournamentWinner.Api.Models;
 
 namespace TournamentWinner.Api.Controllers;
@@ -16,23 +18,19 @@ public class CreateCommunityRequestDto
     public string OwnerId { get; set; }
 }
 [ApiController]
-[Route("api/[controller]")]
 public class CommunityController : ControllerBase
 {
 
     private CommunityContext _context;
-    public CommunityController(CommunityContext context)
+    private readonly ILogger<CommunityController> _logger;
+
+    public CommunityController(CommunityContext context, ILogger<CommunityController> logger)
     {
         this._context = context;
+        this._logger = logger;
     }
 
-    [HttpGet]
-    public string Index()
-    {
-        return "success";
-    }
-
-    [HttpGet("[controller]")]
+    [HttpGet("/api/[controller]")]
     public IEnumerable<Community>? GetCommunities(int p = 1, int r = 20)
     {
         var toSkip = (p - 1) * r;
@@ -43,11 +41,11 @@ public class CommunityController : ControllerBase
         .OrderByDescending(c => c.InsertDate);
     }
 
-    [HttpGet("{communityId}/games")]
-    public async Task<IEnumerable<CommunityGame>?> GetGames(string communityId)
+    [HttpGet("/api/[controller]/{id}/games")]
+    public async Task<IEnumerable<CommunityGame>?> GetGames(string id)
     {
         IQueryable<CommunityGame> query;
-        if (int.TryParse(communityId, out var communityActualId))
+        if (int.TryParse(id, out var communityActualId))
         {
             query = this._context.CommunityGames
                 .Where(c => c.Community.Id == communityActualId);
@@ -55,9 +53,9 @@ public class CommunityController : ControllerBase
         else
         {
             query = this._context.CommunityGames
-            .Where(c => c.Community.Slug == communityId);
+            .Where(c => c.Community.Slug == id);
         }
-        return query.Select(cg =>
+        return await query.Select(cg =>
             new CommunityGame
             {
                 CommunityId = cg.CommunityId,
@@ -83,14 +81,14 @@ public class CommunityController : ControllerBase
                     Slug = cg.Game.Slug,
                 },
                 InsertDate = cg.InsertDate,
-            });
+            }).ToListAsync();
     }
 
-    [HttpGet("{communityId}/game/{gameId}")]
-    public async Task<IActionResult> GetGame(string communityId, string gameId)
+    [HttpGet("/api/[controller]/{id}/games/{gameId}")]
+    public async Task<IActionResult> GetGame(string id, string gameId)
     {
         Game? game = await GetGame(gameId);
-        Community? community = await GetCommunity(communityId);
+        Community? community = await GetCommunity(id);
 
         if (game == null)
         {
@@ -114,13 +112,23 @@ public class CommunityController : ControllerBase
         });
     }
 
-    private async Task<Community?> GetCommunity(string communityId)
-    {
-        if (int.TryParse(communityId, out var communityActualId))
-        {
-            return await this._context.Communities.FirstOrDefaultAsync(c => c.Id == communityActualId);
+
+    [HttpGet("/api/[controller/{id}/users")]
+    public async Task<IEnumerable<UserDto>> GetCommunityUsers(string id, IEnumerable<CommunityRoleType> roleTypes) {
+        if(!roleTypes.Any()){
+            return new List<UserDto>();
         }
-        return await this._context.Communities.FirstOrDefaultAsync(c => c.Slug == communityId);
+
+        var query = await this.SearchCommunity(id);
+    }
+
+    private IQueryable<Community> SearchCommunity(string id)
+    {
+        if (int.TryParse(id, out var communityActualId))
+        {
+            return this._context.Communities.Where(c => c.Id == communityActualId);
+        }
+        return this._context.Communities.Where(c => c.Slug == id);
 
     }
 
@@ -133,23 +141,17 @@ public class CommunityController : ControllerBase
         return await this._context.Games.FirstOrDefaultAsync(g => g.Slug == gameId);
     }
 
-    [HttpGet("{communityId}")]
-    public Task<Community?> Get(string communityId)
+    [HttpGet("/api/[controller]/{id}")]
+    public Task<Community?> Get(string id)
     {
-        //communityId can be the slug or actual id, resolve to one
-        if (int.TryParse(communityId, out var communityActualId))
-        {
-            return this._context.Communities.FirstOrDefaultAsync(c => c.Id == communityActualId);
-        }
-
-        return this._context.Communities.FirstOrDefaultAsync(c => c.Slug == communityId);
+        return GetCommunity(id);
     }
 
-    [HttpGet("{communityId}/players")]
-    public IEnumerable<Player> GetPlayers(string communityId)
+    [HttpGet("/api/[controller]/{id}/players")]
+    public IEnumerable<Player> GetPlayers(string id)
     {
-        //communityId can be the slag or actual id, resolve to one
-        if (int.TryParse(communityId, out var communityActualId))
+        //id can be the slag or actual id, resolve to one
+        if (int.TryParse(id, out var communityActualId))
         {
             return this._context.Communities
                 .FirstOrDefault(c => c.Id == communityActualId)?.CommunityGames.SelectMany(cg => cg.CommunityGamePlayers.Select(cgp => cgp.Player))
@@ -157,12 +159,12 @@ public class CommunityController : ControllerBase
         }
 
         return this._context.Communities
-            .FirstOrDefault(c => c.Slug == communityId)?.CommunityGames.SelectMany(cg => cg.CommunityGamePlayers.Select(cgp => cgp.Player))
+            .FirstOrDefault(c => c.Slug == id)?.CommunityGames.SelectMany(cg => cg.CommunityGamePlayers.Select(cgp => cgp.Player))
             ?? new List<Player>();
 
     }
 
-    [HttpPost]
+    [HttpPost("/api/[controller]")]
     public async Task<Community?> CreateCommunity(CreateCommunityRequestDto dto)
     {
         if (!this.ModelState.IsValid)
@@ -190,12 +192,13 @@ public class CommunityController : ControllerBase
         return community;
     }
 
-    [HttpPatch]
+    [HttpPatch("/api/[controller]")]
     public void Patch(Community community)
     {
 
     }
-    [HttpDelete]
+
+    [HttpDelete("/api/[controller]")]
     public void Delete(Community community)
     {
 

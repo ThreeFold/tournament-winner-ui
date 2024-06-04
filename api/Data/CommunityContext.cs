@@ -21,6 +21,11 @@ namespace TournamentWinner.Api.Data
             modelBuilder.Entity<Community>().ToTable("communities")
                 .Property(u => u.InsertDate)
                 .HasDefaultValueSql("NOW()");
+
+            modelBuilder.Entity<Community>()
+                .HasIndex(c => c.Name);
+            modelBuilder.Entity<Community>()
+                .HasIndex(c => c.Slug);
             modelBuilder.Entity<Community>().HasMany(e => e.CommunityGames)
                 .WithOne(e => e.Community);
             modelBuilder.Entity<CommunityUser>()
