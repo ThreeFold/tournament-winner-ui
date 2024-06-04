@@ -8,7 +8,7 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const session = await event.locals.auth();
         if (!session) {
-            throw error(401, 'Could not grab your session from the request');
+            error(401, 'Could not grab your session from the request');
         }
         const name = data.get('name') as string;
         const slug = data.get('slug') as string;
