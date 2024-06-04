@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+    import { page } from '$app/stores';
     console.log($page.data.communityGames);
-
 </script>
 
 <div>

@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<CommunityContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CommunityContextNpgsql")));
 builder.Services.AddAuthentication(options =>
@@ -30,6 +28,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 var app = builder.Build();
+app.Logger.LogInformation(builder.Configuration.GetConnectionString("CommunityContextNpgsql"));
+var root = (IConfigurationRoot)builder.Configuration;
+app.Logger.LogInformation(root.GetDebugView());
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

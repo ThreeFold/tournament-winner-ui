@@ -26,7 +26,10 @@ export async function registerUser(userToCreate: UserCreateViewModel): Promise<U
                 'Content-Type': 'application/json'
             }
         });
-        console.log(response);
+        if (!response.ok) {
+            console.error(response.status, await response.text());
+            return null;
+        }
         return (await response.json()) as User;
     } catch (e) {
         console.error(e);
@@ -49,6 +52,7 @@ export async function getUser(authProviderId: string, authValue: string): Promis
             }
         });
         if (!response.ok) {
+            console.error(response.status, await response.text());
             return null;
         }
         return (await response.json()) as User;

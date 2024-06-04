@@ -5,9 +5,12 @@ namespace TournamentWinner.Api.Data
 {
     public class CommunityContext : DbContext
     {
-        public CommunityContext(DbContextOptions options)
+        private readonly ILogger _logger;
+        public CommunityContext(DbContextOptions options, ILogger<CommunityContext> logger)
         : base(options)
         {
+            _logger = logger;
+            _logger.LogInformation($"Connection string {this.Database.GetConnectionString()}");
         }
         public DbSet<Community> Communities { get; set; }
         public DbSet<CommunityGame> CommunityGames { get; set; }

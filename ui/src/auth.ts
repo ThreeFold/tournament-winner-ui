@@ -16,7 +16,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
             },
             async jwt(params: any) {
                 let user: User | null = null;
-                if (!params.account && params.token) {
+                if (params.account == null) {
                     return params.token;
                 }
                 user = await getUser(
@@ -32,7 +32,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                         params.account!.providerAccountId
                     );
                     user = await registerUser(userToCreate);
-                    console.info(user);
                 }
                 params.token.name = params.token.name ?? user?.profile?.handle;
                 params.token.id = params.token.id ?? user?.id;
@@ -40,6 +39,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
             },
             async session(params: any) {
                 params.session.name = params.token.name;
+                params.session.user.id = params.token.id;
                 return params.session;
             }
         }

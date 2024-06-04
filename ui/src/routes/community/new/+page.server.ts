@@ -17,6 +17,7 @@ export const actions: Actions = {
         const region = data.get('region') as string;
         const city = data.get('city') as string;
         const links = data.getAll('link') as Array<string>;
+        console.log(session.user);
         const ownerId = session.user.id!;
 
         const newCommunity: CreateCommunityRequest = {
@@ -31,6 +32,7 @@ export const actions: Actions = {
         };
         const url = new URL(`community`, env.APP_API_BASE);
         console.log(url);
+        console.log(newCommunity);
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(newCommunity),

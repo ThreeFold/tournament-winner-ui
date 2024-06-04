@@ -51,7 +51,7 @@ public class UserService : IUserService
 
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
-        var userDto = this.GetUserDto(user);
+        var userDto = UserDto.GetDto(user);
         return userDto;
     }
 
@@ -61,7 +61,7 @@ public class UserService : IUserService
             .Include(u => u.Profile)
             .FirstOrDefaultAsync(u => u.UserAuthMethods.Any(uam => uam.AuthProviderId == authProviderId && uam.AuthValue == authValue));
 
-        return GetUserDto(user);
+        return UserDto.GetDto(user);
     }
 }
 

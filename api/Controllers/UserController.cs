@@ -17,7 +17,7 @@ public class UserController
         this._userService = userService;
     }
 
-    [HttpPost("details")]
+    [HttpPost("signin")]
     public async Task<ActionResult<UserDto>> SignIn(SignInViewModel signInViewModel)
     {
         var dto = await this._userService.GetUser(signInViewModel.AuthProviderId, signInViewModel.AuthValue);

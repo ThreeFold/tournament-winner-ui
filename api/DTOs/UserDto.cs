@@ -10,17 +10,16 @@ public class UserDto
     public DateTime UserCreationDate { get; set; }
     public IEnumerable<(CommunityDto, PlayerDto)> Communities { get; set; } = new List<(CommunityDto Community, PlayerDto Player)>();
 
-    public static UserDto? GetUserDto(User? user)
+    public static UserDto? GetDto(User? user)
     {
-        if (user == null)
+        if(user == null)
             return null;
-
         return new UserDto
         {
             Email = user.Email,
             Id = user.Id,
             UserCreationDate = user.UserCreationDate,
-            Profile = ProfileDto.GetProfileDto(user.Profile),
+            Profile = ProfileDto.GetDto(user.Profile),
         };
     }
 
@@ -37,7 +36,7 @@ public class ProfileDto
     public string? UserId { get; set; }
     public DateTime InsertDate { get; set; }
 
-    public static ProfileDto? GetProfileDto(Profile? profile)
+    public static ProfileDto? GetDto(Profile? profile)
     {
         if (profile == null)
             return null;
@@ -69,10 +68,57 @@ public class CommunityGamePlayerDto
     public required string PlayerId { get; set; }
     public required Player Player { get; set; }
     public double Rank { get; } = 0.0f;
+
+    public static CommunityGamePlayerDto GetDto(CommunityGamePlayer player) {
+        throw new NotImplementedException();
+    }
 }
 
 public class CommunityGameDto
 {
+
+    public int Id { get; set; }
+    public int CommunityId {get;set;}
+    public int GameId {get;set;}
+    public CommunityDto? Community { get; set; }
+    public GameDto? Game { get; set; }
+    public required IEnumerable<CommunityGamePlayerDto?> Players { get; set; } = new List<CommunityGamePlayerDto?>();
+    public DateTime DateAdded { get; set; }
+
+    public static CommunityGameDto? GetDto(CommunityGame? communityGame) {
+        if(communityGame == null)
+            return null;
+        return new CommunityGameDto() {
+            GameId = communityGame.GameId,
+            CommunityId = communityGame.CommunityId,
+            Game = GameDto.GetDto(communityGame.Game),
+            Community = CommunityDto.GetDto(communityGame.Community),
+            Players = communityGame.CommunityGamePlayers.Select(x => CommunityGamePlayerDto.GetDto(x)),
+            Id = communityGame.Id,
+            DateAdded = communityGame.InsertDate,
+        };
+
+    }
+}
+
+public class GameDto {
+    
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string Slug { get; set; }
+    public required string Description { get; set; }
+    public required string BannerImage { get; set; }
+    public required string IconImage { get; set; }
+    public IEnumerable<CharacterGameDto> CharacterGames { get; set; } = new List<CharacterGameDto>();
+    public IEnumerable<CommunityGameDto> CommunityGames { get; set; } = new List<CommunityGameDto>();
+    public DateTime ReleaseDate { get; set; }
+
+    public static GameDto GetDto(Game game) {
+        throw new NotImplementedException();
+    }
+}
+
+public class CharacterGameDto {
 
 }
 
@@ -87,6 +133,10 @@ public class CommunityDto
     public string? City { get; set; }
     public IEnumerable<CommunityGameDto> CommunityGames { get; set; } = new List<CommunityGameDto>();
     public IDictionary<CommunityRoleType, IEnumerable<PlayerDto>> Players { get; set; } = new Dictionary<CommunityRoleType, IEnumerable<PlayerDto>>();
+
+    public static CommunityDto? GetDto(Community? community) {
+        throw new NotImplementedException();
+    }
 }
 
 

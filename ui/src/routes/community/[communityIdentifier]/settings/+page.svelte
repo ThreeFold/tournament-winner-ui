@@ -1,4 +1,1 @@
-
-<div id="community-settings">
-
-</div>
+<div id="community-settings"></div>
