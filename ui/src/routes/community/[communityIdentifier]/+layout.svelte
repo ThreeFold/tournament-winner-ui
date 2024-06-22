@@ -1,45 +1,27 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import type { LayoutData } from './$types';
-
-    export let data: LayoutData;
-    $: communitySubPages = [
-        {
-            SubPageTitle: 'Home',
-            Url: data.communityHref,
-            Label: 'Community Home Page'
-        },
-        {
-            SubPageTitle: 'Games',
-            Url: `${data.communityHref}/games`,
-            Label: 'Games'
-        },
-        {
-            SubPageTitle: 'Players',
-            Url: `${data.communityHref}/players`,
-            Label: 'Players'
-        },
-        {
-            SubPageTitle: 'Rankings',
-            Url: `${data.communityHref}/ranks`,
-            Label: `Rankings`
-        }
-    ];
-    $: pathname = $page.url.pathname;
-    $: activeSubPage = communitySubPages.find((v) => v.Url?.includes(pathname));
 </script>
 
 <div>
-    <h1>{data.community?.name}</h1>
+    <h1>{$page.data.community?.name}</h1>
 </div>
-<div>
-    {#each communitySubPages as communitySubPage}
-        <a
-            class="nav-item {activeSubPage === communitySubPage ? 'active' : ''}"
-            href={communitySubPage.Url}>{communitySubPage.Label}</a
-        >
-    {/each}
-</div>
+<nav>
+    <ul>
+        <li style="background-color:;">
+            <a href="{$page.data.communityHref}">Home</a> 
+        </li>
+        <li>
+            <a class="" href="{$page.data.communityHref}/games">Games</a> 
+        </li>
+        <li>
+            <a class="" href="{$page.data.communityHref}/Players">Players</a> 
+        </li>
+        <li>
+            <a class="" href="{$page.data.communityHref}/games">Rankings</a> 
+        </li>
+    </ul>
+</nav>
 <div>
     <slot />
 </div>
+

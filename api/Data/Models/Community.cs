@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace TournamentWinner.Api.Models;
 public class Community
 {
@@ -8,7 +10,16 @@ public class Community
     public string Country { get; set; }
     public string RegionState { get; set; }
     public string? City { get; set; }
+    public Color ThemeColor { get; set; } 
     public ICollection<CommunityGame> CommunityGames { get; set; }
     public ICollection<CommunityUser> Users { get; set; }
     public DateTime InsertDate { get; set; }
+}
+
+[Owned]
+public class Color {
+    public byte Red {get;set;}
+    public byte Green {get;set;}
+    public byte Blue {get;set;}
+    public float Opacity {get;set;}
 }

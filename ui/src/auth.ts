@@ -1,10 +1,10 @@
 import type { User } from '$lib/models/player';
 import { UserCreateViewModel, getUser, registerUser } from '$lib/server/UserRepo';
-import { SvelteKitAuth } from '@auth/sveltekit';
+import { SvelteKitAuth, type SvelteKitAuthConfig} from '@auth/sveltekit';
 import Auth0 from '@auth/sveltekit/providers/auth0';
 
 export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
-    const authOptions = {
+    const authOptions: SvelteKitAuthConfig = {
         providers: [Auth0],
         trustHost: true,
         callbacks: {
@@ -16,7 +16,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
             },
             async jwt(params: any) {
                 let user: User | null = null;
-                if (params.account == null) {
+                if (!params.account && params.token) {
+                    console.info("Token Exists", params.token);
                     return params.token;
                 }
                 user = await getUser(
@@ -33,14 +34,16 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                     );
                     user = await registerUser(userToCreate);
                 }
-                params.token.name = params.token.name ?? user?.profile?.handle;
-                params.token.id = params.token.id ?? user?.id;
+                params.token.user.name = params.token.name ?? user?.profile?.handle;
+                params.token.user.id = params.token.id ?? user?.id;
+                console.info("Built Token", params.token);
                 return params.token;
             },
-            async session(params: any) {
-                params.session.name = params.token.name;
-                params.session.user.id = params.token.id;
-                return params.session;
+            async session({session, token}) {
+                session.user.id = token.user.id;
+                session.user.name = token.user.name;
+                console.info("Built session", session);
+                return session;
             }
         }
     };

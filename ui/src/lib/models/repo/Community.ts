@@ -8,9 +8,16 @@ export default interface Community {
     country: string;
     regionState: string;
     city: string;
+    themeColor: Color;
     users: Array<CommunityUser>;
     insertDate?: Date;
     links: Array<string>;
+}
+export interface Color {
+    red:number;
+    green: number;
+    blue: number;
+    opacity: number;
 }
 
 export interface CommunityUser {

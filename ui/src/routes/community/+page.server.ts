@@ -1,12 +1,16 @@
 import { env } from '$env/dynamic/private';
 import type Community from '$lib/models/repo/Community';
-import { get } from '$lib/server/API';
 import type { PageServerLoad } from './$types';
 
-export const load = (async () => {
-    const fetchUrl = new URL(`/community`, env.APP_API_BASE);
-    const communities = await get<Array<Community>>(fetchUrl);
+export const load = (async ({fetch}) => {
+    const url = new URL(`community`, env.APP_API_BASE);
+    const response = await fetch(url);
+    if(!response.ok) {
+        console.error("API did not respond successfully", response, await response.text())
+        return {};
+    }
+    const result = (await response.json()) as Array<Community>;
     return {
-        communities: communities
+        communities: result, 
     };
 }) satisfies PageServerLoad;

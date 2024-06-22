@@ -87,11 +87,12 @@ public class CommunityController : ControllerBase
     [HttpGet("/api/[controller]/{id}/games/{gameId}")]
     public async Task<CommunityGameDto?> GetGame(string id, string gameId)
     {
-        var query = _context.CommunityGames;
-        if (int.TryParse(id, out var actualGameId)) {
-            query.Where(x => x.GameId == actualGameId);
-        } else {
-            query.Where(x => x.Game.Slug == gameId);
+        Game? game = await GetGame(gameId);
+        Community? community = await SearchCommunity(id).FirstOrDefaultAsync();
+
+        if (game == null)
+        {
+            return NotFound("Game not found");
         }
         
         if (int.TryParse(id, out var actualCommunityId)) {
@@ -105,16 +106,14 @@ public class CommunityController : ControllerBase
 
 
     [HttpGet("/api/[controller]/{id}/users")]
-    public async Task<IEnumerable<UserDto?>> GetCommunityUsers(string id, IEnumerable<CommunityRoleType> roleTypes) {
-        if(!roleTypes.Any()){
+    public async Task<IEnumerable<UserDto?>> GetCommunityUsers(string id, IEnumerable<CommunityRoleType> roleType) {
+        if(!roleType.Any()){
             return new List<UserDto>();
         }
 
         return await this.SearchCommunity(id)
-            .SelectMany(x => x.Users
-                    .Select(y => UserDto.GetDto(y.User)))
+            .SelectMany(x => x.Users.Select(y => UserDto.GetUserDto(y.User)))
             .ToListAsync();
-
     }
 
     private IQueryable<Community> SearchCommunity(string id)

@@ -16,9 +16,8 @@ export class UserCreateViewModel {
 
 export async function registerUser(userToCreate: UserCreateViewModel): Promise<User | null> {
     try {
-        console.log(userToCreate);
+        console.trace("Attempting to register user", userToCreate);
         const url = new URL('user/register', env.APP_API_BASE);
-        console.log(url);
         const response = await fetch(url, {
             body: JSON.stringify(userToCreate),
             method: 'POST',
@@ -26,8 +25,8 @@ export async function registerUser(userToCreate: UserCreateViewModel): Promise<U
                 'Content-Type': 'application/json'
             }
         });
-        if (!response.ok) {
-            console.error(response.status, await response.text());
+        if(!response.ok) {
+            console.warn("Response did not return an OK status code", response, await response.text());
             return null;
         }
         return (await response.json()) as User;
@@ -43,7 +42,8 @@ export async function getUser(authProviderId: string, authValue: string): Promis
         authValue
     });
     try {
-        const url = new URL('user/signin', env.APP_API_BASE);
+        console.trace("Attempting to find the user", signInDetails);
+        const url = new URL('user/details', env.APP_API_BASE);
         const response = await fetch(url, {
             body: signInDetails,
             method: 'POST',
@@ -52,12 +52,12 @@ export async function getUser(authProviderId: string, authValue: string): Promis
             }
         });
         if (!response.ok) {
-            console.error(response.status, await response.text());
+            console.warn(response.status, await response.text());
             return null;
         }
         return (await response.json()) as User;
     } catch (e) {
         console.error(e);
-        return null;
     }
+    return null;
 }
