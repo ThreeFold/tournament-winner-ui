@@ -685,6 +685,35 @@ namespace twapi.Migrations
                                 .HasForeignKey("CommunityId");
                         });
 
+                    b.OwnsMany("TournamentWinner.Api.Models.SocialLink", "SocialLinks", b1 =>
+                        {
+                            b1.Property<int>("CommunityId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Url")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("CommunityId", "Id");
+
+                            b1.ToTable("SocialLink");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CommunityId");
+                        });
+
+                    b.Navigation("SocialLinks");
+
                     b.Navigation("ThemeColor")
                         .IsRequired();
                 });

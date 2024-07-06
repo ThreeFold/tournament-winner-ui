@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import type { SocialLink } From '$lib/
     import { enhance } from '$app/forms';
 
     export let data: PageData;
@@ -16,7 +17,7 @@
               .join('');
     let customSlug = false;
 
-    $: links = new Array<string>();
+    $: links = new Array<SocialLink>();
     function addLink() {
         links = [...links, ''];
     }
@@ -106,9 +107,16 @@
             <input
                 class="grow px-2 py-1 outline-none border border-slate-300 rounded-l-md focus:ring-2 ring-inset ring-emerald-300/70"
                 type="url"
+                name={`link-name`}
+                placeholder="Link Text"
+                bind:value={link.name}
+            />
+            <input
+                class="grow px-2 py-1 outline-none border border-slate-300 rounded-l-md focus:ring-2 ring-inset ring-emerald-300/70"
+                type="url"
                 name={`link`}
                 placeholder="Community External Link"
-                bind:value={link}
+                bind:value={link.url}
             />
             <button
                 class="bg-red-700 outline-none border border-red-900 focus:ring-2 ring-inset ring-red-800/70 focus:bg-red-600 hover:bg-red-600 text-white rounded-r-md px-2 py-1"

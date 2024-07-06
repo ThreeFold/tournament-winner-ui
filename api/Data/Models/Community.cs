@@ -13,7 +13,14 @@ public class Community
     public Color ThemeColor { get; set; } 
     public ICollection<CommunityGame> CommunityGames { get; set; }
     public ICollection<CommunityUser> Users { get; set; }
+    public ICollection<SocialLink> SocialLinks { get; set; }
     public DateTime InsertDate { get; set; }
+}
+
+[Owned]
+public class SocialLink {
+    public string Name { get; set; }
+    public string Url { get; set; }
 }
 
 [Owned]

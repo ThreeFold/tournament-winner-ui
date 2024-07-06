@@ -7,6 +7,9 @@
     <nav class="flex p-4 bg-emerald-500 font-white items-center mb-6">
         <a class="px-2 py-3 hover:bg-emerald-200 hover:text-emerald-600 rounded-lg" href="/">Home</a
         >
+
+        <a class="px-2 py-3 hover:bg-emerald-200 hover:text-emerald-600 rounded-lg" href="/events">Events</a
+        >
         <a
             class="px-2 py-3 hover:bg-emerald-200 hover:text-emerald-600 rounded-lg"
             href="/community">Communities</a
@@ -22,7 +25,7 @@
         >
         <UserHeaderTab class="ml-auto" />
     </nav>
-    <div class="sm:max-w-full md:max-w-5xl m-auto">
+    <div class="container mx-auto">
         <slot />
     </div>
 </div>

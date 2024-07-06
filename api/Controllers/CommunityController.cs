@@ -87,21 +87,13 @@ public class CommunityController : ControllerBase
     [HttpGet("/api/[controller]/{id}/games/{gameId}")]
     public async Task<CommunityGameDto?> GetGame(string id, string gameId)
     {
-        Game? game = await GetGame(gameId);
-        Community? community = await SearchCommunity(id).FirstOrDefaultAsync();
+        var gameIdParsed = int.TryParse(gameId, out var gameIdNumber);
+        Community? community = await SearchCommunity(id)
+            .Include(c => c.CommunityGames.Where(cg => gameIdParsed ? cg.Game.Id == gameIdNumber : cg.Game.Slug == gameId))
+                .ThenInclude(cg => cg.Game)
+            .FirstOrDefaultAsync();
 
-        if (game == null)
-        {
-            return NotFound("Game not found");
-        }
-        
-        if (int.TryParse(id, out var actualCommunityId)) {
-            query.Where(x => x.CommunityId == actualCommunityId);
-        } else {
-            query.Where(x => x.Community.Slug == id);
-        }
-
-        return CommunityGameDto.GetDto(await query.FirstOrDefaultAsync());
+        return CommunityGameDto.GetDto(community?.CommunityGames.FirstOrDefault());
     }
 
 
@@ -112,7 +104,7 @@ public class CommunityController : ControllerBase
         }
 
         return await this.SearchCommunity(id)
-            .SelectMany(x => x.Users.Select(y => UserDto.GetUserDto(y.User)))
+            .SelectMany(x => x.Users.Select(y => UserDto.GetDto(y.User)))
             .ToListAsync();
     }
 

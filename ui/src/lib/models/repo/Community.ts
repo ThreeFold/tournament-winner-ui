@@ -11,7 +11,12 @@ export default interface Community {
     themeColor: Color;
     users: Array<CommunityUser>;
     insertDate?: Date;
-    links: Array<string>;
+    links: Array<SocialLink>;
+}
+
+export interface SocialLink {
+    name:string;
+    url:string;
 }
 export interface Color {
     red:number;

@@ -34,8 +34,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                     );
                     user = await registerUser(userToCreate);
                 }
-                params.token.user.name = params.token.name ?? user?.profile?.handle;
-                params.token.user.id = params.token.id ?? user?.id;
+                params.token.user = {
+                    name: params.token.name ?? user?.profile?.handle,
+                    id: params.token.id ?? user?.id
+                };
                 console.info("Built Token", params.token);
                 return params.token;
             },

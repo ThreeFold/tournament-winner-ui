@@ -1,7 +1,13 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+    import { page } from "$app/stores";
 
-    export let data: PageData;
+    console.log($page.data.community);
 </script>
 
-<p>{data.community?.description}</p>
+<p>{$page.data.community?.description}</p>
+
+<ul>
+    {#each $page.data.community.links as socialLink}
+    <li><a href={socialLink}>Link</a></li>
+    {/each}
+</ul>
