@@ -1,4 +1,9 @@
 export async function get<ResponseType>(url: URL | string): Promise<ResponseType> {
-    const response = await fetch(url);
+    console.log(url);
+    const response = await fetch(url, {
+        'headers': {
+            'Content-Type': 'application/json',
+        }
+    });
     return (await response.json()) as ResponseType;
 }

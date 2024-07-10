@@ -98,8 +98,8 @@ public class CommunityController : ControllerBase
 
 
     [HttpGet("/api/[controller]/{id}/users")]
-    public async Task<IEnumerable<UserDto?>> GetCommunityUsers(string id, IEnumerable<CommunityRoleType> roleType) {
-        if(!roleType.Any()){
+    public async Task<IEnumerable<UserDto?>> GetCommunityUsers(string id, [FromQuery] IEnumerable<CommunityRoleType> roleTypes) {
+        if(!roleTypes.Any()){
             return new List<UserDto>();
         }
 
